@@ -31,13 +31,14 @@ namespace Galactic_Vanguard
 
         public void Update(GameState gameState)
         {
+            MediaPlayer.Stop();
             switch (gameState.GetState())
             {
                 case (GameState.LAUNCH):
                     MediaPlayer.Play((Song)musicLibrary["LAUNCH"]);
                     break;
                 case (GameState.MENU):
-                    MediaPlayer.Play((Song)musicLibrary["MENU"]);
+                    MediaPlayer.Play((Song)musicLibrary["LAUNCH"]);
                     Console.WriteLine("YES");
                     break;
                 case (GameState.INGAME):

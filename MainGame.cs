@@ -4,10 +4,11 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Design;
 using Microsoft.Xna.Framework.Media;
 using System;
-using Galactic_Warfare;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.Linq;
+using Galactic_Warfare;
 
 namespace Galactic_Vanguard
 {
@@ -44,6 +45,8 @@ namespace Galactic_Vanguard
         private Texture2D menuBgImg;
         private Texture2D inGameBgNorm;
         private Texture2D inGameBgRev;
+        private Texture2D[] hyperSpace;
+        private int currImg = 0;
 
         //Buttons
         private Button playBtn;
@@ -55,10 +58,12 @@ namespace Galactic_Vanguard
         private Space space;
 
         //Entity Sprites
+        private Texture2D[] planetImgs;
         private Texture2D meteorImg;
-        private Texture2D planetImg;
+        private Texture2D cometImg;
         private Texture2D xWingImg;
         private Texture2D xWingBulletImg;
+        private Texture2D explosionImg;
 
         //Game Vars
         private int bulletSpeed;
@@ -116,15 +121,21 @@ namespace Galactic_Vanguard
             LoadButtons();
             LoadTitles();
             LoadFonts();
-            //LoadMusic();
+            LoadMusic();
 
             void LoadSprites()
             {
                 blankImg = Content.Load<Texture2D>("Images/Sprites/blankImg");
-                meteorImg = Content.Load<Texture2D>("Images/Sprites/meteorImg");
-                planetImg = Content.Load<Texture2D>("Images/Sprites/planet2Img");
-                xWingImg = Content.Load<Texture2D>("Images/Sprites/XWingImg");
-                xWingBulletImg = Content.Load<Texture2D>("Images/Sprites/XWingBulletImg");
+                Meteor.image = Content.Load<Texture2D>("Images/Sprites/meteorImg");
+                Comet.image = Content.Load<Texture2D>("Images/Sprites/cometImg");
+                XWing.image = Content.Load<Texture2D>("Images/Sprites/XWingImg");
+                Bullet.image = Content.Load<Texture2D>("Images/Sprites/XWingBulletImg");
+                Explosion.spriteSheet = Content.Load<Texture2D>("Images/Spritesheets/explosionAnim");
+
+                Planet.images.Add(Content.Load<Texture2D>("Images/Sprites/planet1Img"));
+                Planet.images.Add(Content.Load<Texture2D>("Images/Sprites/planet2Img"));
+                Planet.images.Add(Content.Load<Texture2D>("Images/Sprites/planet3Img"));
+                Planet.images.Add(Content.Load<Texture2D>("Images/Sprites/planet4Img"));
             }
 
             void LoadTitles()
@@ -139,6 +150,13 @@ namespace Galactic_Vanguard
                 menuBgImg = Content.Load<Texture2D>("Images/Backgrounds/menuBgImg");
                 inGameBgNorm = Content.Load<Texture2D>("Images/Backgrounds/spaceImg");
                 inGameBgRev = Content.Load<Texture2D>("Images/Backgrounds/spaceImgRev");
+
+                hyperSpace = new Texture2D[101];
+
+                for(int i = 0; i <= 100; i ++)
+                {
+                    hyperSpace[i] = Content.Load<Texture2D>("Videos/Hyperspace/warps_" + i.ToString("D3"));
+                }
             }
 
             void LoadButtons()
@@ -160,9 +178,8 @@ namespace Galactic_Vanguard
             void LoadMusic()
             {
                 music.AddSong("LAUNCH", Content.Load<Song>("Audio/Music/launchMusic"));
-                music.AddSong("MENU", Content.Load<Song>("Audio/Music/menuMusic"));
+                //music.AddSong("MENU", Content.Load<Song>("Audio/Music/menuMusic"));
                 music.AddSong("INGAME", Content.Load<Song>("Audio/Music/inGameMusic"));
-
             }
         }
 
@@ -175,6 +192,9 @@ namespace Galactic_Vanguard
 
             switch (gameState.GetState())
             {
+                case GameState.FIRSTFRAME:
+                    UpdateFirstFrame();
+                    break;
                 case GameState.LAUNCH:
                     UpdateLaunch();
                     break;
@@ -188,6 +208,12 @@ namespace Galactic_Vanguard
 
             base.Update(gameTime);
 
+            void UpdateFirstFrame()
+            {
+                gameState.SetState(GameState.LAUNCH);
+                music.Update(gameState);
+            }
+
             void UpdateLaunch()
             {
                 playBtn.Update(input);
@@ -195,7 +221,6 @@ namespace Galactic_Vanguard
                 if (playBtn.pressed)
                 {
                     gameState.SetState(GameState.MENU);
-
                 }
             }
 
@@ -205,16 +230,18 @@ namespace Galactic_Vanguard
 
                 if(startBtn.pressed)
                 {
-                    gameState.SetState(GameState.INGAME);
                     InstansiateParams();
+                    gameState.SetState(GameState.INGAME);
+                    music.Update(gameState);
                 }
             }
 
             void UpdateInGame()
             {
                 TimeControl();
+                HyperSpace();
 
-                space.Update();
+                space.Update(gameTime);
             }
         }
 
@@ -235,7 +262,7 @@ namespace Galactic_Vanguard
                     DrawInGame();
                     break;
             }
-
+            DrawText();
             base.Draw(gameTime);
             spriteBatch.End();
 
@@ -256,17 +283,20 @@ namespace Galactic_Vanguard
             {
                 space.Draw(spriteBatch);
 
+                spriteBatch.Draw(hyperSpace[currImg], leftSide, leftSide, Color.White);
+                spriteBatch.Draw(hyperSpace[currImg], rightSide, rightSide, Color.White);
                 spriteBatch.Draw(blankImg, leftBorder, Color.White);
                 spriteBatch.Draw(blankImg, rightBorder, Color.White);
-                spriteBatch.Draw(blankImg, leftSide, Color.Crimson);
-                spriteBatch.Draw(blankImg, rightSide, Color.DarkSlateGray);
+
+                //spriteBatch.Draw(blankImg, leftSide, Color.Crimson);
+                //spriteBatch.Draw(blankImg, rightSide, Color.DarkSlateGray);
+
             }
         }
 
-
         private void InstansiateParams()
         {
-            space = new Space(gameRec, meteorImg, planetImg, inGameBgNorm, inGameBgRev, xWingImg, xWingBulletImg);
+            space = new Space(gameRec,inGameBgNorm, inGameBgRev);
             leftBorder = new Rectangle(gameRec.Left-3, 0, 6, gameRec.Height);
             rightBorder = new Rectangle(gameRec.Right - 3, 0, 6, gameRec.Height);
 
@@ -283,12 +313,20 @@ namespace Galactic_Vanguard
         {
             try
             {
-                //spriteBatch.DrawString(font, Convert.ToString(space.spaceEntities[0].position), new Vector2(0, 0), Color.White);
+                spriteBatch.DrawString(font, Convert.ToString(gameState.GetState()), new Vector2(0, 0), Color.White);
 
             }
             catch (Exception e)
             {
 
+            }
+        }
+        private void HyperSpace()
+        {
+            if(gameTimer.GetFramesPassed() % 5 == 0)
+            {
+                currImg += 1;
+                currImg %= 100;
             }
         }
     }

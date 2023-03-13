@@ -2,6 +2,7 @@
 {
     public class GameState
     {
+        public const int FIRSTFRAME = -1;
         public const int LAUNCH = 0;
         public const int MENU = 1;
         public const int PREGAME = 2;
@@ -9,16 +10,16 @@
         public const int PAUSE = 4;
         public const int ENDGAME = 5;
 
-        private int gameState = 0;
+        private int gameState;
 
         public GameState()
         {
-            gameState = LAUNCH;
+            gameState = FIRSTFRAME;
         }
 
         public void SetState(int gameState)
         {
-            this.gameState = gameState;
+            this.gameState = gameState;        
         }
 
         public int GetState()

@@ -16,7 +16,9 @@ namespace Galactic_Vanguard
         private Color color;
         private float angle;
 
-        public static Texture2D image;
+        public static List<Texture2D> images = new List<Texture2D>();
+        private static int imgIdx = 0;
+        private Texture2D image;
 
         public Planet() : base()
         {
@@ -28,6 +30,8 @@ namespace Galactic_Vanguard
             rec = new Rectangle(rng.Next(Space.rec.Left - radius, Space.rec.Right - radius), Space.rec.Top - 2 * radius, radius * 2, radius * 2);
             position = rec.Location.ToVector2();
             angle = (float)(rng.Next(0, 360)*Math.PI/180);
+            image = images[imgIdx % images.Count];
+            imgIdx += 1;
         }
 
         public override void Draw(SpriteBatch spritebatch)

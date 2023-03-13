@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Galactic_Warfare;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Galactic_Vanguard
@@ -15,53 +16,61 @@ namespace Galactic_Vanguard
         public static Rectangle rec;
         private GameTimer gameTimer;
         private ScrollingScreen gameBg;
+        private Viewport spaceView;
+        private GameTime gameTime;
 
         private XWing xwing;
         public List<Entity> spaceEntities;
 
         private EnvironmentListener bulletListener;
 
+        SoundEffect gunSnd;
+
+        private int cometFreq;
         private int meteorFreq;
         private int planetFreq;
         private int tieFreq;
 
         private int bulletSpeed;
 
-        public Space(Rectangle gameRec, Texture2D meteorImg, Texture2D planetImg, Texture2D spaceBgImgNorm, Texture2D spaceBgImgRev, Texture2D XWingImg, Texture2D XWingBulletImg)
+        public Space(Rectangle gameRec, Texture2D spaceBgImgNorm, Texture2D spaceBgImgRev)
         {
-            Meteor.image = meteorImg;
-            Planet.image = planetImg;
-            XWing.image = XWingImg;
-            Bullet.image = XWingBulletImg;
             rec = gameRec;
 
             gameTimer = new GameTimer();
             spaceEntities = new List<Entity>();
             bulletListener = new EnvironmentListener(this);
+            spaceView = new Viewport(rec);
 
             bulletSpeed = 5;
 
-            meteorFreq = 30;
-            planetFreq = 8 * 120;
+            meteorFreq = (int)2.5*120;
+            planetFreq = 30 * 120;
+            cometFreq = 2 * 120;
 
             gameBg = new ScrollingScreen(spaceBgImgNorm, spaceBgImgRev, gameRec);
             xwing = new XWing(5, Color.White, gameRec, bulletListener);
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
+            this.gameTime = gameTime;
             gameTimer.Update();
             gameBg.Update();
 
             XWingControl();
             MeteorControl();
+            CometControl();
             PlanetControl();
+            
             UpdateEntities();
             CollisionControl();
+            MemoryControl();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.GraphicsDevice.Viewport = spaceView;
             gameBg.Draw(spriteBatch);
 
             foreach (Entity spaceEntity in spaceEntities)
@@ -70,12 +79,12 @@ namespace Galactic_Vanguard
             }
 
             xwing.Draw(spriteBatch);
+            spriteBatch.GraphicsDevice.Viewport = new Viewport(0,0,1280,720);
         }
 
         public void AddEntity(Entity entity)
         {
             spaceEntities.Add(entity);
-            Console.WriteLine("Added");
         }
 
         public void XWingControl()
@@ -88,6 +97,14 @@ namespace Galactic_Vanguard
             if (gameTimer.GetFramesPassed() % meteorFreq == 0)
             {
                 spaceEntities.Add(new Meteor());
+            }
+        }
+
+        private void CometControl()
+        {
+            if (gameTimer.GetFramesPassed() % cometFreq == 0)
+            {
+                spaceEntities.Add(new Comet());
             }
         }
 
@@ -126,6 +143,7 @@ namespace Galactic_Vanguard
                         {
                             spaceEntities.Remove(meteor);
                             spaceEntities.Remove(bullet);
+                            spaceEntities.Add(new Explosion(meteor.GetRec().Center, meteor.GetRec().Width, gameTime));
                             goto CollisionDetected;
                         }
                     }
@@ -140,30 +158,35 @@ namespace Galactic_Vanguard
     
         private void MemoryControl()
         {
-            foreach(Entity entity in spaceEntities)
+            try
             {
-                switch(entity.GetType())
+                foreach (Entity entity in spaceEntities)
                 {
-                    case Type t when t == typeof(Meteor):
-                        if (entity.GetPosition().ToPoint().Y > rec.Bottom)
-                        {
-                            spaceEntities.Remove(entity);
-                        }
-                        break;
-                    case Type t when t == typeof(Bullet):
-                        if (entity.GetPosition().ToPoint().Y < -100)
-                        {
-                            spaceEntities.Remove(entity);
-                        }
-                        break;
-                    case Type t when t == typeof(Planet):
-                        if (entity.GetPosition().ToPoint().Y > rec.Bottom)
-                        {
-                            spaceEntities.Remove(entity);
-                        }
-                        break;
+                    switch (entity.GetType())
+                    {
+                        case Type t when t == typeof(Meteor):
+                            if (entity.GetPosition().ToPoint().Y > rec.Bottom)
+                            {
+                                spaceEntities.Remove(entity);
+                            }
+
+                            break;
+                        case Type t when t == typeof(Bullet):
+                            if (entity.GetPosition().ToPoint().Y < -100)
+                            {
+                                spaceEntities.Remove(entity);
+                            }
+                            break;
+                        case Type t when t == typeof(Planet):
+                            if (entity.GetPosition().ToPoint().Y > rec.Bottom)
+                            {
+                                spaceEntities.Remove(entity);
+                            }
+                            break;
+                    }
                 }
             }
+            catch { } 
         }
     }
 }

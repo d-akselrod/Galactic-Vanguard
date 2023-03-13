@@ -11,7 +11,6 @@ namespace Galactic_Vanguard
 
         private double speed;
         private double angle;
-        private Color color;
 
         public Bullet(Rectangle rec, double speed, double angle, Color color) : base()
         {
