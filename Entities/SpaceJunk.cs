@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Galactic_Vanguard
 {
-    public class SpaceJunk : Entity
+    class SpaceJunk : Entity
     {
         public static Texture2D image;
 
@@ -29,7 +29,7 @@ namespace Galactic_Vanguard
 
         public override void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(image, new Rectangle(rec.X + rec.Width / 2, rec.Y + rec.Height / 2, rec.Width, rec.Height), null, Color.White, (float)angle, new Vector2(image.Width / 2, image.Height / 2), SpriteEffects.None, 0f);
+            spritebatch.Draw(image, new Rectangle(rec.X + rec.Width / 2, rec.Y + rec.Height / 2, rec.Width, rec.Height), null, Color.White, angle, new Vector2(image.Width / 2, image.Height / 2), SpriteEffects.None, 0f);
         }
     }
 }

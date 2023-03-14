@@ -1,5 +1,4 @@
-﻿using System.Runtime.Intrinsics.Arm.Arm64;
-using System;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,9 +10,8 @@ namespace Galactic_Vanguard
         public static Texture2D image;
 
         private double speed;
-        private double angle;
 
-        public Bullet(Rectangle rec, double speed, double angle, Color color) : base()
+        public Bullet(Rectangle rec, double speed, float angle, Color color) : base()
         {
             this.rec = rec;
             this.speed = speed;
@@ -28,7 +26,7 @@ namespace Galactic_Vanguard
 
         public override void Update()
         {
-            Base.Update();
+            base.Update();
         }
 
         public override void Draw(SpriteBatch spritebatch)

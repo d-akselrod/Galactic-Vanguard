@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using Galactic_Warfare;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Galactic_Vanguard
 {
@@ -24,9 +25,6 @@ namespace Galactic_Vanguard
         private GameTimer gameTimer;
         private InputController input;
         private MusicController music;
-        
-        private ScrollingScreen leftSpace;
-        private ScrollingScreen rightScreen;
 
         private Rectangle leftSide;
         private Rectangle rightSide;
@@ -56,19 +54,6 @@ namespace Galactic_Vanguard
 
         //Game Entities
         private Space space;
-
-        //Entity Sprites
-        private Texture2D[] planetImgs;
-        private Texture2D meteorImg;
-        private Texture2D cometImg;
-        private Texture2D xWingImg;
-        private Texture2D xWingBulletImg;
-        private Texture2D explosionImg;
-
-        //Game Vars
-        private int bulletSpeed;
-        private int meteorFreq;
-        private int planetFreq;
 
         public MainGame()
         {
@@ -122,6 +107,7 @@ namespace Galactic_Vanguard
             LoadTitles();
             LoadFonts();
             LoadMusic();
+            LoadSFX();
 
             void LoadSprites()
             {
@@ -168,9 +154,10 @@ namespace Galactic_Vanguard
 
             void LoadSFX()
             {
-
+                Explosion.soundEffect = Content.Load<SoundEffect>("Audio/SFX/explosionSfx");
+                Gun.soundEffect = Content.Load<SoundEffect>("Audio/SFX/laserSfx");
             }
-        
+
             void LoadFonts()
             {
                 font = Content.Load<SpriteFont>("Fonts/font");
@@ -317,7 +304,7 @@ namespace Galactic_Vanguard
                 spriteBatch.DrawString(font, Convert.ToString(gameState.GetState()), new Vector2(0, 0), Color.White);
 
             }
-            catch (Exception e)
+            catch
             {
 
             }

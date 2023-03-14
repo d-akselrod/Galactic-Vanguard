@@ -49,11 +49,23 @@
 /processorParam:Quality=Best
 /build:Audio/Music/launchMusic.mp3
 
+#begin Audio/SFX/explosionSfx.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/explosionSfx.wav
+
 #begin Audio/SFX/gunSfx.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Audio/SFX/gunSfx.wav
+
+#begin Audio/SFX/laserSfx.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/laserSfx.wav
 
 #begin Fonts/File.spritefont
 /importer:FontDescriptionImporter

@@ -17,7 +17,6 @@ namespace Galactic_Vanguard
         private GameTimer gameTimer;
         private ScrollingScreen gameBg;
         private Viewport spaceView;
-        private GameTime gameTime;
 
         private XWing xwing;
         public List<Entity> spaceEntities;
@@ -61,7 +60,6 @@ namespace Galactic_Vanguard
 
         public void Update(GameTime gameTime)
         {
-            this.gameTime = gameTime;
             gameTimer.Update();
             gameBg.Update();
 
@@ -156,7 +154,7 @@ namespace Galactic_Vanguard
                         {
                             spaceEntities.Remove(meteor);
                             spaceEntities.Remove(bullet);
-                            spaceEntities.Add(new Explosion(meteor.GetRec().Center, meteor.GetRec().Width, gameTime));
+                            spaceEntities.Add(new Explosion(meteor.GetRec().Center, meteor.GetRec().Width, 1f));
                             goto CollisionDetected;
                         }
                     }
@@ -176,7 +174,7 @@ namespace Galactic_Vanguard
                     {
                         if (Collision.BoxBox(bullet.GetRec(), junk.GetRec()))
                         {
-                            spaceEntities.Add(new Explosion(new Point(bullet.GetRec().Center.X, bullet.GetRec().Top), 20, gameTime));
+                            spaceEntities.Add(new Explosion(new Point(bullet.GetRec().Center.X, bullet.GetRec().Top), 20,0f));
                             spaceEntities.Remove(bullet);
                             goto CollisionDetected;
                         }
@@ -199,7 +197,7 @@ namespace Galactic_Vanguard
                         {
                             spaceEntities.Remove(meteor);
                             spaceEntities.Remove(junk);
-                            spaceEntities.Add(new Explosion(GraphicsHelper.GetMidpoint(meteor.GetRec().Center, junk.GetRec().Center), meteor.GetRec().Width + junk.GetRec().Width, gameTime));
+                            spaceEntities.Add(new Explosion(GraphicsHelper.GetMidpoint(meteor.GetRec().Center, junk.GetRec().Center), meteor.GetRec().Width + junk.GetRec().Width, 1f));
                             goto CollisionDetected;
                         }
                     }

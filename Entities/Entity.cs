@@ -34,7 +34,6 @@ namespace Galactic_Vanguard
 
         public virtual void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(image, rec, color);
         }
 
         public Vector2 GetPosition()
