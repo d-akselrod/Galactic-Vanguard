@@ -46,7 +46,7 @@ namespace Galactic_Vanguard
 
             meteorFreq = (int)2.5*120;
             planetFreq = 30 * 120;
-            cometFreq = 2 * 120;
+            cometFreq =  80;
 
             gameBg = new ScrollingScreen(spaceBgImgNorm, spaceBgImgRev, gameRec);
             xwing = new XWing(5, Color.White, gameRec, bulletListener);
@@ -183,6 +183,13 @@ namespace Galactic_Vanguard
                                 spaceEntities.Remove(entity);
                             }
                             break;
+                        case Type t when t == typeof(Comet):
+                            if(entity.GetRec().Left > rec.Right || entity.GetRec().Right < rec.Left)
+                            {
+                                spaceEntities.Remove(entity);
+                            }
+                            break;
+
                     }
                 }
             }

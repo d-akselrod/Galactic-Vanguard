@@ -17,27 +17,23 @@ namespace Galactic_Vanguard
 
         public Comet() : base()
         {
-            angle = (float)(300 * Math.PI / 180);
             flip = SpriteEffects.None;
-            rec = new Rectangle(0, rng.Next(200,600), 10, 70);
-            speed = 0;
+            rec = new Rectangle(0, rng.Next(-40,720), 6, 40);
+            velocity.X = (rng.Next(2) * 2 - 1 )*7;       
+            velocity.Y = rng.Next(1,4);
 
-            while(speed == 0)
-            {
-                speed = rng.Next(-2, 2);
-            }
-
-            velocity.X = (float)(speed * Math.Cos(angle));
-            velocity.Y = (float)(Math.Abs(speed * Math.Sin(angle)));
 
             if (velocity.X > 0)
             {
                 rec.X = Space.rec.Left - rec.Width;
+
+                angle = (float)Math.Atan(velocity.Y / velocity.X) + (float)(Math.PI / 2);
             }
             if (velocity.X < 0)
             {
                 rec.X = Space.rec.Right;
-                flip = SpriteEffects.FlipHorizontally;
+
+                angle = -(float)Math.Atan(velocity.Y / Math.Abs(velocity.X)) - (float)(Math.PI / 2);
             }
 
             position = rec.Location.ToVector2();
@@ -50,7 +46,7 @@ namespace Galactic_Vanguard
 
         public override void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(image, new Rectangle(rec.X + rec.Width / 2, rec.Y + rec.Height / 2, rec.Width, rec.Height), null, Color.White, angle, new Vector2(image.Width / 2, image.Height / 2), flip, 0f);
+            spritebatch.Draw(image, new Rectangle(rec.X + rec.Width / 2, rec.Y + rec.Height / 2, rec.Width, rec.Height), null, Color.White * 0.4f, angle, new Vector2(image.Width / 2, image.Height / 2), SpriteEffects.None, 0f);
         }
     }
 }
