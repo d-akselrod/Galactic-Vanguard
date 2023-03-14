@@ -130,6 +130,7 @@ namespace Galactic_Vanguard
                 Comet.image = Content.Load<Texture2D>("Images/Sprites/cometImg");
                 XWing.image = Content.Load<Texture2D>("Images/Sprites/XWingImg");
                 Bullet.image = Content.Load<Texture2D>("Images/Sprites/XWingBulletImg");
+                SpaceJunk.image = Content.Load<Texture2D>("Images/Sprites/spaceJunkImg");
                 Explosion.spriteSheet = Content.Load<Texture2D>("Images/Spritesheets/explosionAnim");
 
                 Planet.images.Add(Content.Load<Texture2D>("Images/Sprites/planet1Img"));

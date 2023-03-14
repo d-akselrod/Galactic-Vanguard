@@ -18,5 +18,10 @@ namespace Galactic_Vanguard
         {
             return new Rectangle((int)(rec.X + (rec.Width - rec.Width * scale) / 2), (int)(rec.Y + (rec.Height - rec.Height * scale) / 2), (int)(rec.Width * scale), (int)(rec.Height * scale));
         }
+
+        public static Point GetMidpoint(Point p1, Point p2)
+        {
+            return new Point((p2.X + p1.X) / 2, (p2.Y + p1.Y) / 2);
+        }
     }
 }

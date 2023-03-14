@@ -194,6 +194,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/Sprites/planet4Img.png
 
+#begin Images/Sprites/spaceJunkImg.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Sprites/spaceJunkImg.png
+
 #begin Images/Sprites/XWingBulletImg.png
 /importer:TextureImporter
 /processor:TextureProcessor

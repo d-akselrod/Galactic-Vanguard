@@ -12,12 +12,9 @@ namespace Galactic_Vanguard
     {
         public static Texture2D image;
         private float angle;
-        private int speed;
-        SpriteEffects flip;
 
         public Comet() : base()
         {
-            flip = SpriteEffects.None;
             rec = new Rectangle(0, rng.Next(-40,720), 6, 40);
             velocity.X = (rng.Next(2) * 2 - 1 )*7;       
             velocity.Y = rng.Next(1,4);

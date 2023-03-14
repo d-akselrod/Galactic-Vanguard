@@ -31,5 +31,10 @@ namespace Galactic_Vanguard
         {
             anim.Draw(spritebatch, color, SpriteEffects.None);
         }
+
+        public bool IsAnimating()
+        {
+            return anim.isAnimating;
+        }
     }
 }

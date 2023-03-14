@@ -15,6 +15,7 @@ namespace Galactic_Vanguard
         protected Vector2 position;
         protected bool collisionEnabled;
         protected Color color;
+        protected float angle;
 
         protected Random rng;
 
