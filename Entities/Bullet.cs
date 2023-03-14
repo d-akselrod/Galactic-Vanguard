@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Runtime.Intrinsics.Arm.Arm64;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,15 +23,12 @@ namespace Galactic_Vanguard
             position = rec.Location.ToVector2();
 
             velocity.X = (float)(speed * Math.Sin(angle));
-            velocity.Y = (float)(speed * Math.Cos(angle));
+            velocity.Y = -(float)(speed * Math.Cos(angle));
         }
 
         public override void Update()
         {
-            position.X += velocity.X;
-            position.Y -= velocity.Y;
-
-            rec.Location = position.ToPoint();
+            Base.Update();
         }
 
         public override void Draw(SpriteBatch spritebatch)

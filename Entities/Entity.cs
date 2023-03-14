@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,7 @@ namespace Galactic_Vanguard
 
         public virtual void Draw(SpriteBatch spritebatch)
         {
+            spritebatch.Draw(image, rec, color);
         }
 
         public Vector2 GetPosition()
