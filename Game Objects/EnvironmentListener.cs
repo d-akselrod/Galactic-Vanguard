@@ -8,9 +8,9 @@ namespace Galactic_Vanguard
 {
     public class EnvironmentListener
     {
-        private Space space;
+        private GameEnvironment space;
 
-        public EnvironmentListener(Space space)
+        public EnvironmentListener(GameEnvironment space)
         {
             this.space = space;
         }

@@ -15,11 +15,14 @@ namespace Galactic_Warfare
         private int bulletSpeed;
         private Rectangle gameRec;
         private Gun gun;
+        private int externalAmmo;
 
         private int fireTimer = 0;
 
         private List<Bullet> bullets;
         private EnvironmentListener bulletListener;
+
+        public List<Rectangle> collisionRecs;
 
         public XWing(int bulletSpeed, Color color, Rectangle gameRec, EnvironmentListener bulletListener)
         {
@@ -28,9 +31,16 @@ namespace Galactic_Warfare
             this.gameRec = gameRec;
             rotation = 0;
             gun = new Gun(bulletListener);
+            externalAmmo = 240;
 
             rec = GraphicsHelper.GetCentralRectangle(1280, 600, 80, 80);
             position = rec.Location.ToVector2();
+
+            collisionRecs = new List<Rectangle>();
+            collisionRecs.Add(new Rectangle(rec.Left, (int)(rec.Bottom - rec.Height * 0.6), (int)(rec.Width * 0.15), (int)(rec.Height * 0.6)));
+            collisionRecs.Add(new Rectangle((int)(rec.Right - rec.Width * 0.15), (int)(rec.Bottom - rec.Height * 0.6), (int)(rec.Width * 0.15), (int)(rec.Height * 0.6)));
+            collisionRecs.Add(new Rectangle((int)(rec.Center.X - rec.Width * 0.08), rec.Top, (int)(rec.Width * 0.16), rec.Height));
+            collisionRecs.Add(new Rectangle(rec.Left, (int)(rec.Top + rec.Height * 0.7), (int)(rec.Width), (int)(rec.Height * 0.3)));
 
             velocity = new Vector2(1, 0);
         }
@@ -97,11 +107,34 @@ namespace Galactic_Warfare
 
         private void GunControl(KeyboardState keyboard)
         {
-            if (keyboard.IsKeyDown(Keys.Space) && gun.fireTimer <= 0)
+            if (keyboard.IsKeyDown(Keys.Space) && gun.fireTimer <= 0 && gun.loadedAmmo > 0 && gun.isReloading == false)
             {
                 gun.Shoot(rec, rotation);
             }
+
+            if(keyboard.IsKeyDown(Keys.R) && gun.isReloading == false && gun.loadedAmmo < gun.magSize)
+            {
+                gun.Reload(ref externalAmmo);
+            }
+
             gun.Update();
+        }
+
+        public bool Collides(Rectangle rec2)
+        {
+            collisionRecs[0] = (new Rectangle(rec.Left, (int)(rec.Bottom - rec.Height * 0.6), (int)(rec.Width * 0.15), (int)(rec.Height * 0.6)));
+            collisionRecs[1] = (new Rectangle((int)(rec.Right - rec.Width * 0.15), (int)(rec.Bottom - rec.Height * 0.6), (int)(rec.Width * 0.15), (int)(rec.Height * 0.6)));
+            collisionRecs[2] = (new Rectangle((int)(rec.Center.X - rec.Width * 0.08), rec.Top, (int)(rec.Width * 0.16), rec.Height));
+            collisionRecs[3] = (new Rectangle(rec.Left, (int)(rec.Top + rec.Height * 0.7), (int)(rec.Width), (int)(rec.Height * 0.3)));
+
+            foreach (Rectangle rec1 in collisionRecs)
+            {
+                if (rec2.Intersects(rec1))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

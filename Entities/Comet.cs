@@ -22,13 +22,13 @@ namespace Galactic_Vanguard
 
             if (velocity.X > 0)
             {
-                rec.X = Space.rec.Left - rec.Width;
+                rec.X = GameEnvironment.rec.Left - rec.Width;
 
                 angle = (float)Math.Atan(velocity.Y / velocity.X) + (float)(Math.PI / 2);
             }
             if (velocity.X < 0)
             {
-                rec.X = Space.rec.Right;
+                rec.X = GameEnvironment.rec.Right;
 
                 angle = -(float)Math.Atan(velocity.Y / Math.Abs(velocity.X)) - (float)(Math.PI / 2);
             }

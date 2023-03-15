@@ -9,6 +9,11 @@ namespace Galactic_Vanguard
 {
     public class GraphicsHelper
     {
+        public static Texture2D blank;
+        public static void DrawRec(SpriteBatch spriteBatch, Rectangle rec, Color color)
+        {
+            spriteBatch.Draw(blank, rec, color);
+        }
         public static Rectangle GetCentralRectangle(int screenWidth, int y, int imgWidth, int imgHeight)
         {
             return new Rectangle(screenWidth / 2 - imgWidth / 2, y, imgWidth, imgHeight);

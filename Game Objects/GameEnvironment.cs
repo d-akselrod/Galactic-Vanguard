@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Galactic_Vanguard
 {
-    public class Space
+    public class GameEnvironment
     {
         public static Rectangle rec;
         private GameTimer gameTimer;
@@ -31,18 +31,12 @@ namespace Galactic_Vanguard
         private int tieFreq;
         private int junkFreq;
 
-        private int bulletSpeed;
-
-        public Space(Rectangle gameRec, Texture2D spaceBgImgNorm, Texture2D spaceBgImgRev)
+        public GameEnvironment(Texture2D spaceBgImgNorm, Texture2D spaceBgImgRev)
         {
-            rec = gameRec;
-
             gameTimer = new GameTimer();
             spaceEntities = new List<Entity>();
             bulletListener = new EnvironmentListener(this);
             spaceView = new Viewport(rec);
-
-            bulletSpeed = 5;
 
             meteorFreq = (int)2.5*120;
             planetFreq = 30 * 120;
@@ -54,8 +48,8 @@ namespace Galactic_Vanguard
             cometFreq = 80;
             junkFreq = 2 * 120;
 
-            gameBg = new ScrollingScreen(spaceBgImgNorm, spaceBgImgRev, gameRec);
-            xwing = new XWing(5, Color.White, gameRec, bulletListener);
+            gameBg = new ScrollingScreen(spaceBgImgNorm, spaceBgImgRev, rec);
+            xwing = new XWing(5, Color.White, rec, bulletListener);
         }
 
         public void Update(GameTime gameTime)
@@ -85,7 +79,7 @@ namespace Galactic_Vanguard
             }
 
             xwing.Draw(spriteBatch);
-            spriteBatch.GraphicsDevice.Viewport = new Viewport(0,0,1280,720);
+            spriteBatch.GraphicsDevice.Viewport = new Viewport(0, 0, 1280, 720);
         }
 
         public void AddEntity(Entity entity)
@@ -143,6 +137,42 @@ namespace Galactic_Vanguard
             BulletMeteor();
             BulletJunk();
             MeteorJunk();
+            XWingMeteor();
+            XWingJunk();
+
+            void XWingMeteor()
+            {
+                foreach (Meteor meteor in spaceEntities.OfType<Meteor>())
+                {
+                    if (xwing.Collides(meteor.GetRec()))
+                    {
+                        spaceEntities.Remove(meteor);
+                        spaceEntities.Add(new Explosion(meteor.GetRec().Center, meteor.GetRec().Width, 1f));
+                        goto CollisionDetected;
+                    }
+                }
+            CollisionDetected:
+                {
+                    //Play Animation
+                }
+            }
+
+            void XWingJunk()
+            {
+                foreach (SpaceJunk junk in spaceEntities.OfType<SpaceJunk>())
+                {
+                    if (xwing.Collides(junk.GetRec()))
+                    {
+                        spaceEntities.Remove(junk);
+                        spaceEntities.Add(new Explosion(junk.GetRec().Center, junk.GetRec().Width, 1f));
+                        goto CollisionDetected;
+                    }
+                }
+            CollisionDetected:
+                {
+                    //Play Animation
+                }
+            }
 
             void BulletMeteor()
             {

@@ -27,7 +27,7 @@ namespace Galactic_Vanguard
             collisionEnabled = false;
 
             velocity = new Vector2(0,0.4f);
-            rec = new Rectangle(rng.Next(Space.rec.Left - radius, Space.rec.Right - radius), Space.rec.Top - 2 * radius, radius * 2, radius * 2);
+            rec = new Rectangle(rng.Next(GameEnvironment.rec.Left - radius, GameEnvironment.rec.Right - radius), GameEnvironment.rec.Top - 2 * radius, radius * 2, radius * 2);
             position = rec.Location.ToVector2();
             angle = (float)(rng.Next(0, 360)*Math.PI/180);
             image = images[imgIdx % images.Count];

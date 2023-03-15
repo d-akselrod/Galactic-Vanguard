@@ -22,7 +22,7 @@ namespace Galactic_Vanguard
             radius = rng.Next(14, 30);
             angle = rng.Next(0,360)* rng.Next(0, 360);
 
-            rec = new Rectangle(rng.Next(Space.rec.Left + 20, Space.rec.Right - 20 - 2 * radius), Space.rec.Top - 2 * radius, radius * 2, radius * 2);
+            rec = new Rectangle(rng.Next(GameEnvironment.rec.Left + 20, GameEnvironment.rec.Right - 20 - 2 * radius), GameEnvironment.rec.Top - 2 * radius, radius * 2, radius * 2);
             velocity = new Vector2(rng.Next(-5,5)/10f, 2);
             position = rec.Location.ToVector2();
             
