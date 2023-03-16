@@ -8,7 +8,7 @@ namespace Galactic_Vanguard
 {
     public class Stats
     {
-        public static int points;
+        public static int skillPoints;
         public static int maxLevel;
 
         public static int shieldLvl;
@@ -19,7 +19,7 @@ namespace Galactic_Vanguard
 
         public Stats()
         {
-            points = 100;
+            skillPoints = 40;
             maxLevel = 8;
 
             shieldLvl = 0;
@@ -34,7 +34,7 @@ namespace Galactic_Vanguard
             if(shieldLvl < maxLevel)
             {
                 shieldLvl += 1;
-                points -= 1;
+                skillPoints -= 1;
             }
         }
 
@@ -43,7 +43,7 @@ namespace Galactic_Vanguard
             if(healthLvl < maxLevel)
             {
                 healthLvl += 1;
-                points -= 1;
+                skillPoints -= 1;
             }
         }
 
@@ -52,7 +52,7 @@ namespace Galactic_Vanguard
             if(gunLvl < maxLevel)
             {
                 gunLvl += 1;
-                points -= 1;
+                skillPoints -= 1;
             }
         }
 
@@ -61,7 +61,7 @@ namespace Galactic_Vanguard
             if(ammoLvl < maxLevel)
             {
                 ammoLvl += 1;
-                points -= 1;
+                skillPoints -= 1;
             }
         }
 
@@ -70,7 +70,7 @@ namespace Galactic_Vanguard
             if(engineLvl < maxLevel)
             {
                 engineLvl += 1;
-                points -= 1;
+                skillPoints -= 1;
             }
         }
     }

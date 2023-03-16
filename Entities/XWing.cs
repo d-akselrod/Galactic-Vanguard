@@ -125,7 +125,7 @@ namespace Galactic_Warfare
 
         private void StatsControl(KeyboardState currKeyboard, KeyboardState prevKeyboard)
         {
-            if (Stats.points > 0)
+            if (Stats.skillPoints > 0 && currKeyboard.GetPressedKeys().Length == 1)
             {
                 if (currKeyboard.IsKeyDown(Keys.D1) && currKeyboard != prevKeyboard)
                 {

@@ -10,6 +10,7 @@ using System.Diagnostics.Metrics;
 using System.Linq;
 using Galactic_Warfare;
 using Microsoft.Xna.Framework.Audio;
+using Galactic_Vanguard.Entities;
 
 namespace Galactic_Vanguard
 {
@@ -121,6 +122,7 @@ namespace Galactic_Vanguard
                 XWing.image = Content.Load<Texture2D>("Images/Sprites/XWingImg");
                 Bullet.image = Content.Load<Texture2D>("Images/Sprites/XWingBulletImg");
                 SpaceJunk.image = Content.Load<Texture2D>("Images/Sprites/spaceJunkImg");
+                Upgrade.image = Content.Load<Texture2D>("Images/Sprites/upgradeImg");
                 Explosion.spriteSheet = Content.Load<Texture2D>("Images/Spritesheets/explosionAnim");
 
                 HUD.bulletImg = Content.Load<Texture2D>("Images/Sprites/bulletIconImg");

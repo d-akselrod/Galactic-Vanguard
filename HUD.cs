@@ -184,7 +184,15 @@ namespace Galactic_Vanguard
         
             void DrawStats()
             {
-
+                if(Stats.skillPoints > 0)
+                {
+                    spriteBatch.DrawString(font, "SKILL POINTS: " + Stats.skillPoints.ToString(), new Vector2(GameEnvironment.rec.Right + 60, GameEnvironment.rec.Bottom - 30), Color.White);
+                }
+                else
+                {
+                    spriteBatch.DrawString(font, "MAX UPGRADES", new Vector2(GameEnvironment.rec.Right + 100, GameEnvironment.rec.Bottom - 30), Color.White);
+                }
+                //spriteBatch.DrawString(font, reloadMsg, new Vector2(90, extraAmmoRec.Y + 40), reloadMsgColor);
             }
         }
     }

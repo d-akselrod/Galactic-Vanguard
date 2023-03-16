@@ -4,6 +4,7 @@ using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Galactic_Vanguard.Entities;
 using Galactic_Warfare;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -30,6 +31,7 @@ namespace Galactic_Vanguard
         private int planetFreq;
         private int tieFreq;
         private int junkFreq;
+        private int upgradeFreq;
 
         public GameEnvironment(Texture2D spaceBgImgNorm, Texture2D spaceBgImgRev)
         {
@@ -42,6 +44,7 @@ namespace Galactic_Vanguard
             planetFreq = 30 * 120;
             cometFreq =  80;
             junkFreq = 4 * 120;
+            upgradeFreq = 120 * 15;
 
             gameBg = new ScrollingScreen(spaceBgImgNorm, spaceBgImgRev, rec);
             xwing = new XWing(5, Color.White, rec, bulletListener);
@@ -57,7 +60,8 @@ namespace Galactic_Vanguard
             CometControl();
             PlanetControl();
             JunkControl();
-            
+            UpgradeControl();
+
             UpdateEntities();
             CollisionControl();
             MemoryControl();
@@ -118,6 +122,14 @@ namespace Galactic_Vanguard
                 spaceEntities.Add(new Planet());
             }
         }
+
+        private void UpgradeControl()
+        {
+            if ((gameTimer.GetFramesPassed()) % upgradeFreq == 0)
+            {
+                spaceEntities.Add(new Upgrade());
+            }
+        }
     
         private void UpdateEntities()
         {
@@ -134,6 +146,7 @@ namespace Galactic_Vanguard
             MeteorJunk();
             XWingMeteor();
             XWingJunk();
+            XWingUpgrade();
 
             void XWingMeteor()
             {
@@ -232,6 +245,24 @@ namespace Galactic_Vanguard
                 {
                     //Play Animation
                 }
+            }
+
+            void XWingUpgrade()
+            {
+                foreach (Upgrade upgrade in spaceEntities.OfType<Upgrade>())
+                {
+                    if (Collision.BoxBox(xwing.GetRec(), upgrade.GetRec()))
+                    {
+                        Stats.skillPoints += 1;
+                        spaceEntities.Remove(upgrade);
+                        goto CollisionDetected;
+                    }
+                }
+            CollisionDetected:
+                {
+                    //Play Animation
+                }
+
             }
         }
     
