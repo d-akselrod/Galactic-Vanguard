@@ -78,7 +78,14 @@
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Fonts/File.spritefont;Fonts/font.spritefont
+/build:Fonts/File.spritefont;Fonts/hudFont.spritefont
+
+#begin Fonts/hudFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/hudFont.spritefont
 
 #begin Images/Backgrounds/launchBgImg.png
 /importer:TextureImporter
@@ -164,6 +171,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/Sprites/cometImg.png
 
+#begin Images/Sprites/extraAmmoImg.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Sprites/extraAmmoImg.png
+
 #begin Images/Sprites/meteorImg.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -223,6 +242,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/Sprites/planet4Img.png
+
+#begin Images/Sprites/reloadBarImg.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Sprites/reloadBarImg.png
 
 #begin Images/Sprites/spaceJunkImg.png
 /importer:TextureImporter

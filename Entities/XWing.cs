@@ -43,6 +43,7 @@ namespace Galactic_Warfare
             collisionRecs.Add(new Rectangle(rec.Left, (int)(rec.Top + rec.Height * 0.7), (int)(rec.Width), (int)(rec.Height * 0.3)));
 
             velocity = new Vector2(1, 0);
+            HUD.externalAmmo = externalAmmo;
         }
 
         public void SetBulletSpeed(int bulletSpeed)

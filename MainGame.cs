@@ -122,7 +122,10 @@ namespace Galactic_Vanguard
                 Bullet.image = Content.Load<Texture2D>("Images/Sprites/XWingBulletImg");
                 SpaceJunk.image = Content.Load<Texture2D>("Images/Sprites/spaceJunkImg");
                 Explosion.spriteSheet = Content.Load<Texture2D>("Images/Spritesheets/explosionAnim");
+
                 HUD.bulletImg = Content.Load<Texture2D>("Images/Sprites/bulletIconImg");
+                HUD.reloadBarImg = Content.Load<Texture2D>("Images/Sprites/reloadBarImg");
+                HUD.extraAmmoImg = Content.Load<Texture2D>("Images/Sprites/extraAmmoImg");
 
                 Planet.images.Add(Content.Load<Texture2D>("Images/Sprites/planet1Img"));
                 Planet.images.Add(Content.Load<Texture2D>("Images/Sprites/planet2Img"));
@@ -166,7 +169,8 @@ namespace Galactic_Vanguard
 
             void LoadFonts()
             {
-                font = Content.Load<SpriteFont>("Fonts/font");
+                font = Content.Load<SpriteFont>("Fonts/hudFont");
+                HUD.font = font;
             }       
         
             void LoadMusic()
@@ -328,7 +332,7 @@ namespace Galactic_Vanguard
     
         private void HUDControl()
         {
-            
+            hud.Update();
         }
     }
 }

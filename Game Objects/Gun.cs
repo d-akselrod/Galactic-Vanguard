@@ -17,6 +17,7 @@ namespace Galactic_Vanguard
         private Bullet round;
         private EnvironmentListener bulletListener;
         private int bulletSpeed;
+
         public int fireTimer;
 
         public int magSize;
@@ -47,9 +48,11 @@ namespace Galactic_Vanguard
             if (isReloading == true)
             {
                 reloadTimer -= 1;
+                HUD.reloadPercentage = (float)(((float)reloadTime - (float)reloadTimer) / (float)reloadTime);
                 if (reloadTimer <= 0)
                 {
                     isReloading = false;
+                    HUD.isReloading = isReloading;
                     HUD.loadedAmmo = loadedAmmo;
                 }
             }
@@ -70,6 +73,7 @@ namespace Galactic_Vanguard
         public void Reload(ref int extraAmmo)
         {
             isReloading = true;
+            HUD.isReloading = isReloading;
             reloadTimer = reloadTime;
             reloadSfxInst.Play();
 
@@ -85,7 +89,6 @@ namespace Galactic_Vanguard
                     break;
                 }
             }
-
             HUD.externalAmmo = extraAmmo;
         }
     }

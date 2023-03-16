@@ -38,15 +38,10 @@ namespace Galactic_Vanguard
             bulletListener = new EnvironmentListener(this);
             spaceView = new Viewport(rec);
 
-            meteorFreq = (int)2.5*120;
+            meteorFreq = (int)1.5*120;
             planetFreq = 30 * 120;
             cometFreq =  80;
-            junkFreq = 7 * 120;
-            
-            meteorFreq = (int)1 * 120;
-            planetFreq = 30 * 120;
-            cometFreq = 80;
-            junkFreq = 2 * 120;
+            junkFreq = 4 * 120;
 
             gameBg = new ScrollingScreen(spaceBgImgNorm, spaceBgImgRev, rec);
             xwing = new XWing(5, Color.White, rec, bulletListener);
