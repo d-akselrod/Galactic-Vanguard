@@ -9,10 +9,10 @@ namespace Galactic_Vanguard
 {
     public class InputController
     {
-        public KeyboardState currKeyboard;
-        public KeyboardState prevKeyboard;
-        public MouseState currMouse;
-        public MouseState prevMouse;
+        public static KeyboardState currKeyboard;
+        public static KeyboardState prevKeyboard;
+        public static MouseState currMouse;
+        public static MouseState prevMouse;
 
         public void Update()
         {

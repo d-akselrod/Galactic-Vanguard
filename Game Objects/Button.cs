@@ -22,11 +22,11 @@ namespace Galactic_Vanguard
 
         public void Update(InputController input)
         {
-            if (Collision.BoxPoint(rec, input.currMouse.Position))
+            if (Collision.BoxPoint(rec, InputController.currMouse.Position))
             {
                 color = Color.White * 0.85f;
 
-                if (input.currMouse.LeftButton == ButtonState.Pressed && input.prevMouse.LeftButton == ButtonState.Released)
+                if (InputController.currMouse.LeftButton == ButtonState.Pressed && InputController.prevMouse.LeftButton == ButtonState.Released)
                 {
                     pressed = true;
                 }

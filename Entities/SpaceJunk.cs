@@ -15,7 +15,7 @@ namespace Galactic_Vanguard
 
         public SpaceJunk() : base()
         {
-            int radius = rng.Next(40, 70);
+            int radius = rng.Next(80, 110);
             rec = new Rectangle(0, 0, radius, radius);
             angle = rng.Next(0, 360);
             position = new Vector2(rng.Next(GameEnvironment.rec.Left + 10, GameEnvironment.rec.Right - 10 - rec.Width), -rec.Height);

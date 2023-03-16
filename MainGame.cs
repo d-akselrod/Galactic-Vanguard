@@ -131,6 +131,14 @@ namespace Galactic_Vanguard
                 Planet.images.Add(Content.Load<Texture2D>("Images/Sprites/planet2Img"));
                 Planet.images.Add(Content.Load<Texture2D>("Images/Sprites/planet3Img"));
                 Planet.images.Add(Content.Load<Texture2D>("Images/Sprites/planet4Img"));
+
+                HUD.ammoImg = Content.Load<Texture2D>("Images/Icons/ammoIcon");
+                HUD.healthImg = Content.Load<Texture2D>("Images/Icons/healthIcon");
+                HUD.shieldImg = Content.Load<Texture2D>("Images/Icons/shieldIcon");
+                HUD.engineImg = Content.Load<Texture2D>("Images/Icons/rocketIcon");
+                HUD.gunImg = Content.Load<Texture2D>("Images/Icons/gunIcon");
+                HUD.emptyImg = Content.Load<Texture2D>("Images/Icons/emptyIcon");
+
             }
 
             void LoadTitles()

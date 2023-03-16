@@ -24,6 +24,8 @@ namespace Galactic_Warfare
 
         public List<Rectangle> collisionRecs;
 
+        public Stats stats;
+
         public XWing(int bulletSpeed, Color color, Rectangle gameRec, EnvironmentListener bulletListener)
         {
             this.color = color;
@@ -31,7 +33,8 @@ namespace Galactic_Warfare
             this.gameRec = gameRec;
             rotation = 0;
             gun = new Gun(bulletListener);
-            externalAmmo = 240;
+            externalAmmo = 100;
+            stats = new Stats();
 
             rec = GraphicsHelper.GetCentralRectangle(1280, 600, 80, 80);
             position = rec.Location.ToVector2();
@@ -58,10 +61,9 @@ namespace Galactic_Warfare
 
         public override void Update()
         {
-            InputController input = InputController.GetInput();
-            MovementControl(input.currKeyboard);
-            GunControl(input.currKeyboard);
-
+            MovementControl(InputController.currKeyboard);
+            GunControl(InputController.currKeyboard);
+            StatsControl(InputController.currKeyboard, InputController.prevKeyboard);
             position += velocity;
             rec.Location = position.ToPoint();
             rotation += rotationalVelocity;
@@ -113,12 +115,39 @@ namespace Galactic_Warfare
                 gun.Shoot(rec, rotation);
             }
 
-            if(keyboard.IsKeyDown(Keys.R) && gun.isReloading == false && gun.loadedAmmo < gun.magSize)
+            if(keyboard.IsKeyDown(Keys.R) && gun.isReloading == false && gun.loadedAmmo < gun.magSize && externalAmmo > 0)
             {
                 gun.Reload(ref externalAmmo);
             }
 
             gun.Update();
+        }
+
+        private void StatsControl(KeyboardState currKeyboard, KeyboardState prevKeyboard)
+        {
+            if (Stats.points > 0)
+            {
+                if (currKeyboard.IsKeyDown(Keys.D1) && currKeyboard != prevKeyboard)
+                {
+                    stats.UpgradeHealth();
+                }
+                if (currKeyboard.IsKeyDown(Keys.D2) && currKeyboard != prevKeyboard)
+                {
+                    stats.UpgradeShield();
+                }
+                if (currKeyboard.IsKeyDown(Keys.D3) && currKeyboard != prevKeyboard)
+                {
+                    stats.UpgradeGun();
+                }
+                if (currKeyboard.IsKeyDown(Keys.D4) && currKeyboard != prevKeyboard)
+                {
+                    stats.UpgradeAmmo();
+                }
+                if (currKeyboard.IsKeyDown(Keys.D5) && currKeyboard != prevKeyboard)
+                {
+                    stats.UpgradeEngine();
+                }
+            }  
         }
 
         public bool Collides(Rectangle rec2)
