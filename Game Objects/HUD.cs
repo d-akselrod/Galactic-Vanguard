@@ -56,7 +56,7 @@ namespace Galactic_Vanguard
             ammoRecs = new List<Rectangle>();
             loadedAmmo = 20;
 
-            for (int i = 0; i <50; i++)
+            for (int i = 0; i <80; i++)
             {
                 ammoRecs.Add(new Rectangle(GameEnvironment.rec.Left - 20 - 25*(i%10), 630 - 60*((int)(i/10)), 10, 45));
             }
@@ -89,6 +89,7 @@ namespace Galactic_Vanguard
             DrawReloadText();
             DrawUpgrades();
             DrawStats();
+            DrawHPBars();
 
             void DrawReloadBar()
             {
@@ -184,15 +185,37 @@ namespace Galactic_Vanguard
         
             void DrawStats()
             {
-                if(Stats.skillPoints > 0)
+                if (Stats.skillPoints >=  0 && Stats.level != Stats.maxLevel * 5)
                 {
                     spriteBatch.DrawString(font, "SKILL POINTS: " + Stats.skillPoints.ToString(), new Vector2(GameEnvironment.rec.Right + 60, GameEnvironment.rec.Bottom - 30), Color.White);
                 }
-                else
+                else if (Stats.level == Stats.maxLevel * 5)
                 {
                     spriteBatch.DrawString(font, "MAX UPGRADES", new Vector2(GameEnvironment.rec.Right + 100, GameEnvironment.rec.Bottom - 30), Color.White);
                 }
                 //spriteBatch.DrawString(font, reloadMsg, new Vector2(90, extraAmmoRec.Y + 40), reloadMsgColor);
+            }
+
+            void DrawHPBars()
+            {
+                //GraphicsHelper.DrawRec(spriteBatch, new Rectangle(extraAmmoRec.Left, 100, 20, 480), Color.Black);
+                //GraphicsHelper.DrawRec(spriteBatch, new Rectangle(extraAmmoRec.Left + 3, 103, 13, 474), Color.Crimson);
+
+                GraphicsHelper.DrawRec(spriteBatch, extraAmmoRec.Left, 580, 20, 128 + 45 * Stats.healthLvl + 6, Color.White);
+                GraphicsHelper.DrawRec(spriteBatch, extraAmmoRec.Left + 3, 577, 14, 128 + 45*Stats.healthLvl, Color.Crimson);
+
+                if(XWing.health > 0)
+                {
+                    GraphicsHelper.DrawRec(spriteBatch, new Rectangle(extraAmmoRec.Left + 3, 577 - (128 + 45 * Stats.healthLvl), 14, (int)(((XWing.maxHealth - XWing.health) / XWing.maxHealth) * (45 * Stats.healthLvl + 128))), Color.Black);
+                }
+                else
+                {
+                    GraphicsHelper.DrawRec(spriteBatch, new Rectangle(extraAmmoRec.Left + 3, 577 - (128 + 45 * Stats.healthLvl), 14, (45 * Stats.healthLvl + 128)), Color.Black);
+                }
+
+                GraphicsHelper.DrawRec(spriteBatch, extraAmmoRec.Right - 20, 580, 20, 128 + 45 * Stats.shieldLvl + 6, Color.White);
+                GraphicsHelper.DrawRec(spriteBatch, extraAmmoRec.Right - 17, 577, 14, 128 + 45 * Stats.shieldLvl, Color.SteelBlue);
+                GraphicsHelper.DrawRec(spriteBatch, new Rectangle(extraAmmoRec.Right - 17, 577 - (128 + 45 * Stats.shieldLvl), 14, (int)(((XWing.maxShield - XWing.shield) / XWing.maxShield) * (45 * Stats.shieldLvl + 128))), Color.Black);
             }
         }
     }

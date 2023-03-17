@@ -123,6 +123,7 @@ namespace Galactic_Vanguard
                 Bullet.image = Content.Load<Texture2D>("Images/Sprites/XWingBulletImg");
                 SpaceJunk.image = Content.Load<Texture2D>("Images/Sprites/spaceJunkImg");
                 Upgrade.image = Content.Load<Texture2D>("Images/Sprites/upgradeImg");
+                AmmoKit.image = Content.Load<Texture2D>("Images/Sprites/ammoKitImg");
                 Explosion.spriteSheet = Content.Load<Texture2D>("Images/Spritesheets/explosionAnim");
 
                 HUD.bulletImg = Content.Load<Texture2D>("Images/Sprites/bulletIconImg");

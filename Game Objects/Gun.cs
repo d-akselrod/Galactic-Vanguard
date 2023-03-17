@@ -20,9 +20,9 @@ namespace Galactic_Vanguard
 
         public int fireTimer;
 
-        public int magSize;
+        public static int magSize;
+        public static int reloadTime;
         public int loadedAmmo;
-        public int reloadTime;
         public bool isReloading;
 
         int reloadTimer;
@@ -39,6 +39,8 @@ namespace Galactic_Vanguard
 
             reloadSfxInst = reloadSfx.CreateInstance();
             reloadSfxInst.Volume = 1f;
+
+            HUD.loadedAmmo = loadedAmmo;
         }
 
         public void Update()

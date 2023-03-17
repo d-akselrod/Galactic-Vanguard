@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Galactic_Warfare;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Galactic_Vanguard
     {
         public static int skillPoints;
         public static int maxLevel;
+        public static int level;
 
         public static int shieldLvl;
         public static int healthLvl;
@@ -35,6 +37,8 @@ namespace Galactic_Vanguard
             {
                 shieldLvl += 1;
                 skillPoints -= 1;
+                level += 1;
+                XWing.maxShield += 20;
             }
         }
 
@@ -44,6 +48,9 @@ namespace Galactic_Vanguard
             {
                 healthLvl += 1;
                 skillPoints -= 1;
+                level += 1;
+                XWing.health += 20;
+                XWing.maxHealth += 20;
             }
         }
 
@@ -53,6 +60,8 @@ namespace Galactic_Vanguard
             {
                 gunLvl += 1;
                 skillPoints -= 1;
+                level += 1;
+                Gun.magSize += 5;
             }
         }
 
@@ -62,6 +71,8 @@ namespace Galactic_Vanguard
             {
                 ammoLvl += 1;
                 skillPoints -= 1;
+                level += 1;
+                Gun.reloadTime -= 20;
             }
         }
 
@@ -71,6 +82,10 @@ namespace Galactic_Vanguard
             {
                 engineLvl += 1;
                 skillPoints -= 1;
+                level += 1;
+
+                XWing.linearSpeed += 0.15f;
+                XWing.rotationalSpeed += 0.05f;
             }
         }
     }

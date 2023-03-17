@@ -15,7 +15,17 @@ namespace Galactic_Warfare
         private int bulletSpeed;
         private Rectangle gameRec;
         private Gun gun;
-        private int externalAmmo;
+        public static int externalAmmo;
+
+        public static double health;
+        public static double maxHealth;
+        public static double shield;
+        public static double maxShield;
+
+        public static float linearSpeed;
+        public static float rotationalSpeed;
+
+        public static bool alive;
 
         private int fireTimer = 0;
 
@@ -23,10 +33,11 @@ namespace Galactic_Warfare
         private EnvironmentListener bulletListener;
 
         public List<Rectangle> collisionRecs;
+        private GameTimer timer;
 
         public Stats stats;
 
-        public XWing(int bulletSpeed, Color color, Rectangle gameRec, EnvironmentListener bulletListener)
+        public XWing(int bulletSpeed, Color color, Rectangle gameRec, EnvironmentListener bulletListener) : base()
         {
             this.color = color;
             this.bulletSpeed = bulletSpeed;
@@ -35,6 +46,18 @@ namespace Galactic_Warfare
             gun = new Gun(bulletListener);
             externalAmmo = 100;
             stats = new Stats();
+            timer = new GameTimer();
+
+            maxHealth = 200 * (Stats.healthLvl + 1);
+            health = maxHealth;
+
+            maxShield = 200 * (Stats.healthLvl + 1);
+            shield = maxShield;
+
+            alive = true;
+
+            linearSpeed = 1;
+            rotationalSpeed = 1;
 
             rec = GraphicsHelper.GetCentralRectangle(1280, 600, 80, 80);
             position = rec.Location.ToVector2();
@@ -64,6 +87,9 @@ namespace Galactic_Warfare
             MovementControl(InputController.currKeyboard);
             GunControl(InputController.currKeyboard);
             StatsControl(InputController.currKeyboard, InputController.prevKeyboard);
+            timer.Update();
+            RegenShield();
+
             position += velocity;
             rec.Location = position.ToPoint();
             rotation += rotationalVelocity;
@@ -78,11 +104,11 @@ namespace Galactic_Warfare
             }
             else if (keyboard.IsKeyDown(Keys.A) && rec.Left > gameRec.Left + 50)
             {
-                velocity.X = -2;
+                velocity.X = -linearSpeed;
             }
             else if (keyboard.IsKeyDown(Keys.D) && rec.Right < gameRec.Right - 50)
             {
-                velocity.X = 2;
+                velocity.X = linearSpeed;
             }
             else
             {
@@ -96,11 +122,11 @@ namespace Galactic_Warfare
             }
             else if (keyboard.IsKeyDown(Keys.Left))
             {
-                rotationalVelocity = (float)(-1 * Math.PI / 180);
+                rotationalVelocity = rotationalSpeed * ((float)(-1 * Math.PI / 180));
             }
             else if (keyboard.IsKeyDown(Keys.Right))
             {
-                rotationalVelocity = (float)(1 * Math.PI / 180);
+                rotationalVelocity = rotationalSpeed * (float)(1 * Math.PI / 180);
             }
             else
             {
@@ -115,7 +141,7 @@ namespace Galactic_Warfare
                 gun.Shoot(rec, rotation);
             }
 
-            if(keyboard.IsKeyDown(Keys.R) && gun.isReloading == false && gun.loadedAmmo < gun.magSize && externalAmmo > 0)
+            if(keyboard.IsKeyDown(Keys.R) && gun.isReloading == false && gun.loadedAmmo < Gun.magSize && externalAmmo > 0)
             {
                 gun.Reload(ref externalAmmo);
             }
@@ -125,7 +151,7 @@ namespace Galactic_Warfare
 
         private void StatsControl(KeyboardState currKeyboard, KeyboardState prevKeyboard)
         {
-            if (Stats.skillPoints > 0 && currKeyboard.GetPressedKeys().Length == 1)
+            if (Stats.skillPoints > 0)
             {
                 if (currKeyboard.IsKeyDown(Keys.D1) && currKeyboard != prevKeyboard)
                 {
@@ -165,6 +191,22 @@ namespace Galactic_Warfare
                 }
             }
             return false;
+        }
+    
+        public void RegenShield()
+        {
+            if(timer.GetFramesPassed() % 12 == 0)
+            {
+                if(XWing.shield < XWing.maxShield)
+                {
+                    shield += 0.1;
+
+                    if (XWing.shield > XWing.maxShield)
+                    {
+                        XWing.shield = XWing.maxShield;
+                    }
+                }
+            }
         }
     }
 }

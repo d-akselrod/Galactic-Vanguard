@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Galactic_Vanguard.Entities;
 using Galactic_Warfare;
@@ -32,6 +33,7 @@ namespace Galactic_Vanguard
         private int tieFreq;
         private int junkFreq;
         private int upgradeFreq;
+        private int ammoKitFreq;
 
         public GameEnvironment(Texture2D spaceBgImgNorm, Texture2D spaceBgImgRev)
         {
@@ -40,14 +42,16 @@ namespace Galactic_Vanguard
             bulletListener = new EnvironmentListener(this);
             spaceView = new Viewport(rec);
 
-            meteorFreq = (int)1.5*120;
+            meteorFreq = (int)1.5 * 120;
             planetFreq = 30 * 120;
-            cometFreq =  80;
+            cometFreq = 80;
             junkFreq = 4 * 120;
             upgradeFreq = 120 * 15;
+            ammoKitFreq = 120 * 20;
 
             gameBg = new ScrollingScreen(spaceBgImgNorm, spaceBgImgRev, rec);
             xwing = new XWing(5, Color.White, rec, bulletListener);
+            spaceEntities.Add(xwing);
         }
 
         public void Update(GameTime gameTime)
@@ -61,10 +65,12 @@ namespace Galactic_Vanguard
             PlanetControl();
             JunkControl();
             UpgradeControl();
+            AmmoKitControl();
 
             UpdateEntities();
             CollisionControl();
             MemoryControl();
+            IncreaseDifficulty();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -77,7 +83,11 @@ namespace Galactic_Vanguard
                 spaceEntity.Draw(spriteBatch);
             }
 
-            xwing.Draw(spriteBatch);
+            if (XWing.alive)
+            {
+                xwing.Draw(spriteBatch);
+            }
+
             spriteBatch.GraphicsDevice.Viewport = new Viewport(0, 0, 1280, 720);
         }
 
@@ -88,7 +98,10 @@ namespace Galactic_Vanguard
 
         public void XWingControl()
         {
-            xwing.Update();
+            if (XWing.alive)
+            {
+                xwing.Update();
+            }
         }
 
         private void MeteorControl()
@@ -125,17 +138,47 @@ namespace Galactic_Vanguard
 
         private void UpgradeControl()
         {
-            if ((gameTimer.GetFramesPassed()) % upgradeFreq == 0)
+            if ((gameTimer.GetFramesPassed()) % upgradeFreq == 0 && Stats.level != 5 * Stats.maxLevel)
             {
                 spaceEntities.Add(new Upgrade());
             }
         }
-    
+
+        private void AmmoKitControl()
+        {
+            if ((gameTimer.GetFramesPassed()) % ammoKitFreq == 0)
+            {
+                spaceEntities.Add(new AmmoKit());
+            }
+        }
+
         private void UpdateEntities()
         {
-            foreach(Entity entity in spaceEntities)
+            foreach (Entity entity in spaceEntities)
             {
-                entity.Update();               
+                if (entity.GetType() != typeof(XWing))
+                {
+                    entity.Update();
+                }
+            }
+        }
+
+        private void XWingDmg(int damage)
+        {
+            if (XWing.shield >= damage)
+            {
+                XWing.shield -= damage;
+            }
+            else
+            {
+                XWing.health -= damage - XWing.shield;
+                XWing.shield = 0;
+            }
+
+            if (XWing.health <= 0)
+            {
+                XWing.alive = false;
+                spaceEntities.Remove(xwing);
             }
         }
 
@@ -144,9 +187,15 @@ namespace Galactic_Vanguard
             BulletMeteor();
             BulletJunk();
             MeteorJunk();
-            XWingMeteor();
-            XWingJunk();
-            XWingUpgrade();
+
+            if (XWing.alive)
+            {
+                XWingMeteor();
+                XWingJunk();
+                XWingUpgrade();
+                XWingAmmoKit();
+            }
+
 
             void XWingMeteor()
             {
@@ -156,13 +205,12 @@ namespace Galactic_Vanguard
                     {
                         spaceEntities.Remove(meteor);
                         spaceEntities.Add(new Explosion(meteor.GetRec().Center, meteor.GetRec().Width, 1f));
+                        XWingDmg(20);
                         goto CollisionDetected;
                     }
                 }
             CollisionDetected:
-                {
-                    //Play Animation
-                }
+                { }
             }
 
             void XWingJunk()
@@ -173,18 +221,18 @@ namespace Galactic_Vanguard
                     {
                         spaceEntities.Remove(junk);
                         spaceEntities.Add(new Explosion(junk.GetRec().Center, junk.GetRec().Width, 1f));
+                        XWingDmg(20);
                         goto CollisionDetected;
                     }
                 }
             CollisionDetected:
-                {
-                    //Play Animation
-                }
+                { }  //Play Animation
             }
+
 
             void BulletMeteor()
             {
-                foreach(Bullet bullet in spaceEntities.OfType<Bullet>())
+                foreach (Bullet bullet in spaceEntities.OfType<Bullet>())
                 {
                     foreach (Meteor meteor in spaceEntities.OfType<Meteor>())
                     {
@@ -198,10 +246,8 @@ namespace Galactic_Vanguard
                     }
                 }
 
-                CollisionDetected:
-                {
-                    //Play Animation
-                }
+            CollisionDetected:
+                { }
             }
 
             void BulletJunk()
@@ -212,7 +258,7 @@ namespace Galactic_Vanguard
                     {
                         if (Collision.BoxBox(bullet.GetRec(), junk.GetRec()))
                         {
-                            spaceEntities.Add(new Explosion(new Point(bullet.GetRec().Center.X, bullet.GetRec().Top), 20,0f));
+                            spaceEntities.Add(new Explosion(new Point(bullet.GetRec().Center.X, bullet.GetRec().Top), 20, 0f));
                             spaceEntities.Remove(bullet);
                             goto CollisionDetected;
                         }
@@ -220,11 +266,9 @@ namespace Galactic_Vanguard
                 }
 
             CollisionDetected:
-                {
-                    //Play Animation
-                }
+                { }
             }
-        
+
             void MeteorJunk()
             {
                 foreach (SpaceJunk junk in spaceEntities.OfType<SpaceJunk>())
@@ -242,16 +286,14 @@ namespace Galactic_Vanguard
                 }
 
             CollisionDetected:
-                {
-                    //Play Animation
-                }
+                { }
             }
 
             void XWingUpgrade()
             {
                 foreach (Upgrade upgrade in spaceEntities.OfType<Upgrade>())
                 {
-                    if (Collision.BoxBox(xwing.GetRec(), upgrade.GetRec()))
+                    if (xwing.Collides(upgrade.GetRec()))
                     {
                         Stats.skillPoints += 1;
                         spaceEntities.Remove(upgrade);
@@ -259,10 +301,24 @@ namespace Galactic_Vanguard
                     }
                 }
             CollisionDetected:
-                {
-                    //Play Animation
-                }
+                { }
 
+            }
+
+            void XWingAmmoKit()
+            {
+                foreach (AmmoKit kit in spaceEntities.OfType<AmmoKit>())
+                {
+                    if (xwing.Collides(kit.GetRec()))
+                    {
+                        spaceEntities.Remove(kit);
+                        XWing.externalAmmo += Gun.magSize;
+                        HUD.externalAmmo = XWing.externalAmmo;
+                        goto CollisionDetected;
+                    }
+                }
+            CollisionDetected:
+                { }
             }
         }
     
@@ -305,10 +361,26 @@ namespace Galactic_Vanguard
                                 spaceEntities.Remove(entity);
                             }
                             break;
+                        case Type t when t == typeof(AmmoKit):
+                            if (entity.GetRec().Top > GameEnvironment.rec.Bottom)
+                            {
+                                spaceEntities.Remove(entity);
+                            }
+                            break;
                     }
                 }
             }
             catch { } 
+        }
+    
+        private void IncreaseDifficulty()
+        {
+            if(gameTimer.GetFramesPassed() < 5*60*120 && gameTimer.GetFramesPassed() % (120*15) == 0)
+            {
+                meteorFreq -= 10;
+                cometFreq -= 4;
+                junkFreq -= 10;
+            }
         }
     }
 }
