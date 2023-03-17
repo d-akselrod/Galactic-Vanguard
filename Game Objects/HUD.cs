@@ -4,9 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Galactic_Vanguard
 {
@@ -22,8 +24,12 @@ namespace Galactic_Vanguard
         public static Texture2D healthImg;
         public static Texture2D shieldImg;
         public static Texture2D engineImg;
-        public static Texture2D gunImg;
+        public static Texture2D reloadImg;
         public static Texture2D emptyImg;
+
+        public static Texture2D clockImg;
+        private Rectangle clockRec;
+        private float clockAngle;
 
         private Rectangle ammoRec;
         private Rectangle healthRec;
@@ -72,6 +78,8 @@ namespace Galactic_Vanguard
             gunRec = new Rectangle(GameEnvironment.rec.Right + 144, GameEnvironment.rec.Bottom - 80, 50, 35);
             ammoRec = new Rectangle(GameEnvironment.rec.Right + 206, GameEnvironment.rec.Bottom - 80, 50, 35);
             engineRec = new Rectangle(GameEnvironment.rec.Right + 268, GameEnvironment.rec.Bottom - 80, 50, 35);
+
+            clockRec = new Rectangle(1070, 180, 80, 80);
         }
 
         public void Update()
@@ -79,6 +87,10 @@ namespace Galactic_Vanguard
             timer.Update();
 
             reloadMsgColor = Color.White * (float)(0.5*Math.Sin(timer.GetFramesPassed()/20)+0.5);
+            float a = timer.GetFramesPassed()/120f;
+            float b = a / 60f;
+            float c = (float)(Math.PI * 2 * b);
+            clockAngle = c;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -90,13 +102,15 @@ namespace Galactic_Vanguard
             DrawUpgrades();
             DrawStats();
             DrawHPBars();
+            DrawScore();
+            DrawTimer();
+            DrawHighscore();
 
             void DrawReloadBar()
             {
                 if(isReloading)
                 {
                     GraphicsHelper.DrawRec(spriteBatch, new Rectangle(20, extraAmmoRec.Y + 80, 310, 24), Color.Black);
-                    //GraphicsHelper.DrawRec(spriteBatch, new Rectangle(94, extraAmmoRec.Y + 49, (int)(230*reloadPercentage), 16), Color.LightBlue);
                     spriteBatch.Draw(reloadBarImg, new Rectangle(24, extraAmmoRec.Y + 84, (int)(302 * reloadPercentage), 16), Color.White);
                 }
             }
@@ -127,7 +141,7 @@ namespace Galactic_Vanguard
             {
                 spriteBatch.Draw(healthImg, healthRec, Color.Crimson);
                 spriteBatch.Draw(shieldImg, shieldRec, Color.DeepSkyBlue);
-                spriteBatch.Draw(gunImg, gunRec, Color.Green);
+                spriteBatch.Draw(reloadImg, gunRec, Color.Green);
                 spriteBatch.Draw(ammoImg, ammoRec, Color.Yellow);
                 spriteBatch.Draw(engineImg, engineRec, Color.WhiteSmoke);
 
@@ -143,7 +157,7 @@ namespace Galactic_Vanguard
 
                 for (int i = 0; i < Stats.gunLvl; i++)
                 {
-                    spriteBatch.Draw(gunImg, new Rectangle(gunRec.Left, gunRec.Top - 40 * (i + 1), gunRec.Width, gunRec.Height), Color.Green);
+                    spriteBatch.Draw(reloadImg, new Rectangle(gunRec.Left, gunRec.Top - 40 * (i + 1), gunRec.Width, gunRec.Height), Color.Green);
                 }
 
                 for (int i = 0; i < Stats.ammoLvl; i++)
@@ -193,14 +207,10 @@ namespace Galactic_Vanguard
                 {
                     spriteBatch.DrawString(font, "MAX UPGRADES", new Vector2(GameEnvironment.rec.Right + 100, GameEnvironment.rec.Bottom - 30), Color.White);
                 }
-                //spriteBatch.DrawString(font, reloadMsg, new Vector2(90, extraAmmoRec.Y + 40), reloadMsgColor);
             }
 
             void DrawHPBars()
             {
-                //GraphicsHelper.DrawRec(spriteBatch, new Rectangle(extraAmmoRec.Left, 100, 20, 480), Color.Black);
-                //GraphicsHelper.DrawRec(spriteBatch, new Rectangle(extraAmmoRec.Left + 3, 103, 13, 474), Color.Crimson);
-
                 GraphicsHelper.DrawRec(spriteBatch, extraAmmoRec.Left, 580, 20, 128 + 45 * Stats.healthLvl + 6, Color.White);
                 GraphicsHelper.DrawRec(spriteBatch, extraAmmoRec.Left + 3, 577, 14, 128 + 45*Stats.healthLvl, Color.Crimson);
 
@@ -216,6 +226,23 @@ namespace Galactic_Vanguard
                 GraphicsHelper.DrawRec(spriteBatch, extraAmmoRec.Right - 20, 580, 20, 128 + 45 * Stats.shieldLvl + 6, Color.White);
                 GraphicsHelper.DrawRec(spriteBatch, extraAmmoRec.Right - 17, 577, 14, 128 + 45 * Stats.shieldLvl, Color.SteelBlue);
                 GraphicsHelper.DrawRec(spriteBatch, new Rectangle(extraAmmoRec.Right - 17, 577 - (128 + 45 * Stats.shieldLvl), 14, (int)(((XWing.maxShield - XWing.shield) / XWing.maxShield) * (45 * Stats.shieldLvl + 128))), Color.Black);
+            }
+
+            void DrawScore()
+            {
+                spriteBatch.DrawString(font, "SCORE: " + GameEnvironment.score.ToString("d4"), new Vector2(1035, 60), Color.White);
+            }
+
+            void DrawTimer()
+            {
+                spriteBatch.DrawString(font, "Game Time: " + MainGame.gameTimeStr, new Vector2(995, 270), Color.White);
+                //spriteBatch.Draw(clockImg, clockRec, Color.White);
+                spriteBatch.Draw(clockImg, new Rectangle(clockRec.X + clockRec.Width / 2, clockRec.Y + clockRec.Height / 2, clockRec.Width, clockRec.Height), null, Color.White, clockAngle, new Vector2(clockImg.Width / 2, clockImg.Height / 2), SpriteEffects.None, 0f);        
+            }
+
+            void DrawHighscore()
+            {
+                spriteBatch.DrawString(font, "HIGH SCORE: " + GameEnvironment.score.ToString("d4"), new Vector2(1005, 20), Color.White);
             }
         }
     }

@@ -39,5 +39,15 @@ namespace Galactic_Vanguard
         {
             return framesPassed;
         }
+
+        public int GetSecondsPassed()
+        {
+            return secondsPassed;
+        }
+
+        public string GetTimeFormat()
+        {
+            return minutesPassed.ToString("d2") + " :" + (secondsPassed % 60).ToString("d2");
+        }
     }
 }

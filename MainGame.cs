@@ -53,6 +53,7 @@ namespace Galactic_Vanguard
         private Button startBtn;
 
         private SpriteFont font;
+        public static string gameTimeStr;
 
         //Game Entities
         private GameEnvironment space;
@@ -139,9 +140,9 @@ namespace Galactic_Vanguard
                 HUD.healthImg = Content.Load<Texture2D>("Images/Icons/healthIcon");
                 HUD.shieldImg = Content.Load<Texture2D>("Images/Icons/shieldIcon");
                 HUD.engineImg = Content.Load<Texture2D>("Images/Icons/rocketIcon");
-                HUD.gunImg = Content.Load<Texture2D>("Images/Icons/gunIcon");
+                HUD.reloadImg = Content.Load<Texture2D>("Images/Icons/reloadIcon");
                 HUD.emptyImg = Content.Load<Texture2D>("Images/Icons/emptyIcon");
-
+                HUD.clockImg = Content.Load<Texture2D>("Images/Sprites/secondClock");
             }
 
             void LoadTitles()
@@ -343,6 +344,7 @@ namespace Galactic_Vanguard
     
         private void HUDControl()
         {
+            gameTimeStr = gameTimer.GetTimeFormat();
             hud.Update();
         }
     }

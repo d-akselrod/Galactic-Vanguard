@@ -21,7 +21,7 @@ namespace Galactic_Vanguard
 
         public Stats()
         {
-            skillPoints = 40;
+            skillPoints = 0;
             maxLevel = 8;
 
             shieldLvl = 0;

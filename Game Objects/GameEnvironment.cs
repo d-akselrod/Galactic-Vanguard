@@ -35,6 +35,8 @@ namespace Galactic_Vanguard
         private int upgradeFreq;
         private int ammoKitFreq;
 
+        public static int score;
+
         public GameEnvironment(Texture2D spaceBgImgNorm, Texture2D spaceBgImgRev)
         {
             gameTimer = new GameTimer();
@@ -71,6 +73,7 @@ namespace Galactic_Vanguard
             CollisionControl();
             MemoryControl();
             IncreaseDifficulty();
+            ScoreTimer();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -241,6 +244,7 @@ namespace Galactic_Vanguard
                             spaceEntities.Remove(meteor);
                             spaceEntities.Remove(bullet);
                             spaceEntities.Add(new Explosion(meteor.GetRec().Center, meteor.GetRec().Width, 1f));
+                            score += 5;
                             goto CollisionDetected;
                         }
                     }
@@ -377,9 +381,17 @@ namespace Galactic_Vanguard
         {
             if(gameTimer.GetFramesPassed() < 5*60*120 && gameTimer.GetFramesPassed() % (120*15) == 0)
             {
-                meteorFreq -= 10;
-                cometFreq -= 4;
-                junkFreq -= 10;
+                meteorFreq -= 2;
+                cometFreq -= 2;
+                junkFreq -= 3;
+            }
+        }
+    
+        private void ScoreTimer()
+        {
+            if(gameTimer.GetFramesPassed() % 60 == 0)
+            {
+                score += 1;
             }
         }
     }

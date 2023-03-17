@@ -159,18 +159,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/Icons/emptyIcon.png
 
-#begin Images/Icons/gunIcon.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Images/Icons/gunIcon.png
-
 #begin Images/Icons/healthIcon.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -182,6 +170,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/Icons/healthIcon.png
+
+#begin Images/Icons/reloadIcon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Icons/reloadIcon.png
 
 #begin Images/Icons/rocketIcon.png
 /importer:TextureImporter
@@ -338,6 +338,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/Sprites/reloadBarImg.png
+
+#begin Images/Sprites/secondClock.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Sprites/secondClock.png
 
 #begin Images/Sprites/spaceJunkImg.png
 /importer:TextureImporter
