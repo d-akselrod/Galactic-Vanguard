@@ -21,6 +21,7 @@ namespace Galactic_Vanguard
         private Viewport spaceView;
 
         private XWing xwing;
+        private Tie tie;
         public List<Entity> spaceEntities;
 
         private EnvironmentListener bulletListener;
@@ -50,9 +51,11 @@ namespace Galactic_Vanguard
             junkFreq = 4 * 120;
             upgradeFreq = 120 * 15;
             ammoKitFreq = 120 * 20;
+            tieFreq = 120*10;
 
             gameBg = new ScrollingScreen(spaceBgImgNorm, spaceBgImgRev, rec);
             xwing = new XWing(5, Color.White, rec, bulletListener);
+            tie = new Tie(false);
             spaceEntities.Add(xwing);
         }
 
@@ -68,6 +71,7 @@ namespace Galactic_Vanguard
             JunkControl();
             UpgradeControl();
             AmmoKitControl();
+            TieControl();
 
             UpdateEntities();
             CollisionControl();
@@ -89,6 +93,11 @@ namespace Galactic_Vanguard
             if (XWing.alive)
             {
                 xwing.Draw(spriteBatch);
+            }
+
+            if(tie.isAlive)
+            {
+                tie.Draw(spriteBatch);
             }
 
             spriteBatch.GraphicsDevice.Viewport = new Viewport(0, 0, 1280, 720);
@@ -152,6 +161,21 @@ namespace Galactic_Vanguard
             if ((gameTimer.GetFramesPassed()) % ammoKitFreq == 0)
             {
                 spaceEntities.Add(new AmmoKit());
+            }
+        }
+
+        private void TieControl()
+        {
+            if(tie.isAlive == false)
+            {
+                if (gameTimer.GetFramesPassed() % tieFreq == 0)
+                {
+                    tie = new Tie();
+                }
+            } 
+            else
+            {
+                tie.Update();
             }
         }
 

@@ -121,6 +121,7 @@ namespace Galactic_Vanguard
                 Meteor.image = Content.Load<Texture2D>("Images/Sprites/meteorImg");
                 Comet.image = Content.Load<Texture2D>("Images/Sprites/cometImg");
                 XWing.image = Content.Load<Texture2D>("Images/Sprites/XWingImg");
+                Tie.image = Content.Load<Texture2D>("Images/Sprites/tieImg");
                 Bullet.image = Content.Load<Texture2D>("Images/Sprites/XWingBulletImg");
                 SpaceJunk.image = Content.Load<Texture2D>("Images/Sprites/spaceJunkImg");
                 Upgrade.image = Content.Load<Texture2D>("Images/Sprites/upgradeImg");
