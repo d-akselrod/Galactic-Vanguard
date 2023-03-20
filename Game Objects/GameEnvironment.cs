@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Galactic_Vanguard.Entities;
+using Galactic_Vanguard.Game_Objects;
 using Galactic_Warfare;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -64,15 +65,19 @@ namespace Galactic_Vanguard
             gameTimer.Update();
             gameBg.Update();
 
+            if(tie.isAlive == false)
+            {
+                MeteorControl();
+                JunkControl();
+            }
+
             XWingControl();
-            MeteorControl();
+            
             CometControl();
-            PlanetControl();
-            JunkControl();
+            PlanetControl();   
             UpgradeControl();
             AmmoKitControl();
             TieControl();
-
             UpdateEntities();
             CollisionControl();
             MemoryControl();
@@ -170,12 +175,12 @@ namespace Galactic_Vanguard
             {
                 if (gameTimer.GetFramesPassed() % tieFreq == 0)
                 {
-                    tie = new Tie();
+                    tie = new Tie(bulletListener);
                 }
             } 
             else
             {
-                tie.Update();
+                tie.Update(xwing.GetRec().Center);
             }
         }
 
@@ -214,6 +219,7 @@ namespace Galactic_Vanguard
             BulletMeteor();
             BulletJunk();
             MeteorJunk();
+            BulletTie();
 
             if (XWing.alive)
             {
@@ -259,7 +265,7 @@ namespace Galactic_Vanguard
 
             void BulletMeteor()
             {
-                foreach (Bullet bullet in spaceEntities.OfType<Bullet>())
+                foreach (Bullet bullet in spaceEntities.OfType<XWingBullet>())
                 {
                     foreach (Meteor meteor in spaceEntities.OfType<Meteor>())
                     {
@@ -280,7 +286,7 @@ namespace Galactic_Vanguard
 
             void BulletJunk()
             {
-                foreach (Bullet bullet in spaceEntities.OfType<Bullet>())
+                foreach (Bullet bullet in spaceEntities.OfType<XWingBullet>())
                 {
                     foreach (SpaceJunk junk in spaceEntities.OfType<SpaceJunk>())
                     {
@@ -341,7 +347,28 @@ namespace Galactic_Vanguard
                     {
                         spaceEntities.Remove(kit);
                         XWing.externalAmmo += Gun.magSize;
+                        if(XWing.externalAmmo > 999)
+                        {
+                            XWing.externalAmmo = 999;
+                        }
+
                         HUD.externalAmmo = XWing.externalAmmo;
+                        goto CollisionDetected;
+                    }
+                }
+            CollisionDetected:
+                { }
+            }
+
+            void BulletTie()
+            {
+                foreach (Bullet bullet in spaceEntities.OfType<XWingBullet>())
+                {
+                    if (tie.Collides(bullet.GetRec()))
+                    {
+                        spaceEntities.Add(new Explosion(tie.GetRec().Center, tie.GetRec().Width + tie.GetRec().Width, 1f));
+                        tie = new Tie(false);
+                        score += 15;
                         goto CollisionDetected;
                     }
                 }

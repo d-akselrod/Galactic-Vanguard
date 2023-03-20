@@ -1,21 +1,22 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
-namespace Galactic_Vanguard
+namespace Galactic_Vanguard.Game_Objects
 {
-    public abstract class Bullet : Entity
+    public class XWingBullet : Bullet
     {
-        public static Texture2D image;
-
-        protected double speed;
-
-        public Bullet(Rectangle rec, double speed, float angle) : base()
+        public XWingBullet(Rectangle rec, double speed, float angle) : base(rec, speed, angle)
         {
             this.rec = rec;
             this.speed = speed;
             this.angle = angle;
+
+            color = Color.White;
 
             position = rec.Location.ToVector2();
 
@@ -30,7 +31,7 @@ namespace Galactic_Vanguard
 
         public override void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(image, rec, null, color, (float)angle, new Vector2(image.Width / 2, image.Height / 2), SpriteEffects.None, 0f);
+            base.Draw(spritebatch);
         }
     }
 }

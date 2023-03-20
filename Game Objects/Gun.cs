@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Galactic_Vanguard.Game_Objects;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
@@ -60,16 +61,24 @@ namespace Galactic_Vanguard
             }
         }
 
-        public void Shoot(Rectangle xWingRec, float xWingRotation)
+        public void XWingShoot(Rectangle shipRec, float rotation)
         {
-            bulletListener.AddBullet(new Bullet(new Rectangle((int)(xWingRec.Center.X - xWingRec.Width / 2 * 0.8 * Math.Cos(xWingRotation)), (int)(xWingRec.Center.Y - xWingRec.Height / 2 * 0.8 * Math.Sin(xWingRotation)), 4, 36), bulletSpeed, xWingRotation, Color.SkyBlue));
-            bulletListener.AddBullet(new Bullet(new Rectangle((int)(xWingRec.Center.X + xWingRec.Width / 2 * 0.8 * Math.Cos(xWingRotation)), (int)(xWingRec.Center.Y + xWingRec.Height / 2 * 0.8 * Math.Sin(xWingRotation)), 4, 36), bulletSpeed, xWingRotation, Color.SkyBlue));
+            bulletListener.AddBullet(new XWingBullet(new Rectangle((int)(shipRec.Center.X - shipRec.Width / 2 * 0.8 * Math.Cos(rotation)), (int)(shipRec.Center.Y - shipRec.Height / 2 * 0.8 * Math.Sin(rotation)), 4, 36), bulletSpeed, rotation));
+            bulletListener.AddBullet(new XWingBullet(new Rectangle((int)(shipRec.Center.X + shipRec.Width / 2 * 0.8 * Math.Cos(rotation)), (int)(shipRec.Center.Y + shipRec.Height / 2 * 0.8 * Math.Sin(rotation)), 4, 36), bulletSpeed, rotation));
 
             fireTimer = 30;
             loadedAmmo -= 2;
             shootSfx.CreateInstance().Play();
 
             HUD.loadedAmmo = loadedAmmo;
+        }
+
+        public void TieShoot(Rectangle shipRec, float rotation)
+        {
+            bulletListener.AddBullet(new TieBullet(new Rectangle((int)(shipRec.Center.X - shipRec.Width / 2 * 0.8 * Math.Cos(rotation)), (int)(shipRec.Center.Y - shipRec.Height / 2 * 0.8 * Math.Sin(rotation)), 4, 36), bulletSpeed, rotation));
+            bulletListener.AddBullet(new TieBullet(new Rectangle((int)(shipRec.Center.X + shipRec.Width / 2 * 0.8 * Math.Cos(rotation)), (int)(shipRec.Center.Y + shipRec.Height / 2 * 0.8 * Math.Sin(rotation)), 4, 36), bulletSpeed, rotation));
+
+            shootSfx.CreateInstance().Play();
         }
 
         public void Reload(ref int extraAmmo)

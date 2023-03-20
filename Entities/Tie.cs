@@ -15,32 +15,40 @@ namespace Galactic_Vanguard.Entities
         private GameTimer timer;
 
         private Point nextPos;
+        private Gun gun;
 
-        public Tie()
+        public Tie(EnvironmentListener bulletListener)
         {
             isAlive = true;
             timer = new GameTimer();
             nextPos = new Point();
             velocity = new Vector2(1,0);
             rec = GraphicsHelper.GetCentralRectangle(1280, -100, 90, 100);
+            gun = new Gun(bulletListener);
         }
 
         public Tie(bool isAlive)
         {
             this.isAlive = isAlive;
+            rec = new Rectangle(-100, -100, 0, 0);
         }
 
-        public override void Update()
+        public void Update(Point xWingPos)
         {
             timer.Update();
             UpdatePosition();
+            TurnToXWing(xWingPos);
+            Shoot();
 
             rec.Location += velocity.ToPoint();
         }
 
         public override void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(image, rec, Color.White);
+            if(isAlive)
+            {
+                spritebatch.Draw(image, new Rectangle(rec.X + rec.Width / 2, rec.Y + rec.Height / 2, rec.Width, rec.Height), null, Color.White, (float)angle, new Vector2(image.Width / 2, image.Height / 2), SpriteEffects.None, 0f);
+            }
         }
 
         public void UpdatePosition()
@@ -49,7 +57,7 @@ namespace Galactic_Vanguard.Entities
             {
                 rec.Y += 1;
             }
-            if(timer.GetFramesPassed() % 120*5 == 0)
+            if(timer.GetFramesPassed() % 120*3 == 0)
             {
                 nextPos.X = rng.Next(GameEnvironment.rec.Left + 50, GameEnvironment.rec.Right - 50 - rec.Width);
             }
@@ -77,6 +85,28 @@ namespace Galactic_Vanguard.Entities
             else
             {
                 velocity.X = 0;
+            }
+        }
+
+        public void TurnToXWing(Point xWingCentre)
+        {
+            Point dist = rec.Center - xWingCentre;
+
+            if(dist.X < 0)
+            {
+                angle = (float)Math.Tan((float)dist.X / (float)-dist.Y);
+            }
+            if (dist.X > 0)
+            {
+                angle = (float)Math.Tan((float)dist.X / (float)-dist.Y);
+            }      
+        }
+    
+        public void Shoot()
+        {
+            if (timer.GetFramesPassed() % 120 == 0)
+            {
+                gun.TieShoot(rec, angle);
             }
         }
     }

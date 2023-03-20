@@ -138,7 +138,7 @@ namespace Galactic_Warfare
         {
             if (keyboard.IsKeyDown(Keys.Space) && gun.fireTimer <= 0 && gun.loadedAmmo > 0 && gun.isReloading == false)
             {
-                gun.Shoot(rec, rotation);
+                gun.XWingShoot(rec, rotation);
             }
 
             if(keyboard.IsKeyDown(Keys.R) && gun.isReloading == false && gun.loadedAmmo < Gun.magSize && externalAmmo > 0)
@@ -176,7 +176,7 @@ namespace Galactic_Warfare
             }  
         }
 
-        public bool Collides(Rectangle rec2)
+        public override bool Collides(Rectangle rec2)
         {
             collisionRecs[0] = (new Rectangle(rec.Left, (int)(rec.Bottom - rec.Height * 0.6), (int)(rec.Width * 0.15), (int)(rec.Height * 0.6)));
             collisionRecs[1] = (new Rectangle((int)(rec.Right - rec.Width * 0.15), (int)(rec.Bottom - rec.Height * 0.6), (int)(rec.Width * 0.15), (int)(rec.Height * 0.6)));
@@ -200,6 +200,7 @@ namespace Galactic_Warfare
                 if(XWing.shield < XWing.maxShield)
                 {
                     shield += 0.1;
+                    //shield += 1;
 
                     if (XWing.shield > XWing.maxShield)
                     {

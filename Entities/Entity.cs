@@ -36,6 +36,11 @@ namespace Galactic_Vanguard
         {
         }
 
+        public virtual bool Collides(Rectangle r2)
+        {
+            return rec.Intersects(r2);
+        }
+
         public Vector2 GetPosition()
         {
             return position;
