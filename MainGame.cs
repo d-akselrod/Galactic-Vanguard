@@ -11,6 +11,9 @@ using System.Linq;
 using Galactic_Warfare;
 using Microsoft.Xna.Framework.Audio;
 using Galactic_Vanguard.Entities;
+using System.Xml.Serialization;
+using System.Linq.Expressions;
+using Galactic_Vanguard.Game_Objects;
 
 namespace Galactic_Vanguard
 {
@@ -51,12 +54,21 @@ namespace Galactic_Vanguard
         //Buttons
         private Button playBtn;
         private Button startBtn;
+        private Button pauseBtn;
+        private Button resumeBtn;
+        private Button settingsBtn;
+        private Button exitBtn;
+        private Button backBtn;
+
+        private Slider volumeSlider;
 
         private SpriteFont font;
         public static string gameTimeStr;
 
         //Game Entities
         private GameEnvironment space;
+
+        RenderTarget2D renderTarget;
 
         public MainGame()
         {
@@ -70,13 +82,14 @@ namespace Galactic_Vanguard
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.SynchronizeWithVerticalRetrace = true;
+            graphics.IsFullScreen = true;
 
-            SamplerState samplerState = new SamplerState();
+            /*SamplerState samplerState = new SamplerState();
             samplerState.Filter = TextureFilter.Linear;
             samplerState.AddressU = TextureAddressMode.Wrap;
             samplerState.AddressV = TextureAddressMode.Wrap;
             samplerState.MaxAnisotropy = 16;
-            graphics.GraphicsDevice.SamplerStates[0] = samplerState;
+            graphics.GraphicsDevice.SamplerStates[0] = samplerState;*/
 
             FPS = 120;
             TargetElapsedTime = TimeSpan.FromSeconds(1d / FPS);
@@ -98,7 +111,7 @@ namespace Galactic_Vanguard
             GraphicsDevice.Viewport = gameView;
 
             graphics.ApplyChanges();
-
+            renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
             base.Initialize();
         }
 
@@ -113,6 +126,7 @@ namespace Galactic_Vanguard
             LoadFonts();
             LoadMusic();
             LoadSFX();
+            LoadSliders();
 
             void LoadSprites()
             {
@@ -171,6 +185,17 @@ namespace Galactic_Vanguard
             {
                 playBtn = new Button(Content.Load<Texture2D>("Images/Buttons/playBtnImg"), GraphicsHelper.GetCentralRectangle(screenRec.Width, 580, 300,100));
                 startBtn = new Button(Content.Load<Texture2D>("Images/Buttons/startBtnImg"), GraphicsHelper.GetCentralRectangle(screenRec.Width, 580, 300, 100));
+                pauseBtn = new Button(Content.Load<Texture2D>("Images/Buttons/pauseBtn"), new Rectangle(285, 10, 40, 40), Color.Yellow);
+
+                resumeBtn = new Button(Content.Load<Texture2D>("Images/Buttons/resumeBtn"), GraphicsHelper.GetCentralRectangle(screenRec.Width, 100, 340, 100), Color.White);
+                settingsBtn = new Button(Content.Load<Texture2D>("Images/Buttons/settingsBtn"), GraphicsHelper.GetCentralRectangle(screenRec.Width, 300, 340, 100), Color.White);
+                exitBtn = new Button(Content.Load<Texture2D>("Images/Buttons/exitBtn"), GraphicsHelper.GetCentralRectangle(screenRec.Width, 500, 340, 100), Color.White);
+                backBtn = new Button(Content.Load<Texture2D>("Images/Buttons/backBtn"), GraphicsHelper.GetCentralRectangle(screenRec.Width, 500, 340, 100), Color.White);
+            }
+
+            void LoadSliders()
+            {
+                volumeSlider = new Slider(Content.Load<Texture2D>("Images/Sprites/volumeBar"), Content.Load<Texture2D>("Images/Sprites/volumeSlider"), GraphicsHelper.GetCentralRectangle(screenRec.Width, 150, 350, 30));
             }
 
             void LoadSFX()
@@ -215,6 +240,12 @@ namespace Galactic_Vanguard
                 case GameState.INGAME:
                     UpdateInGame();
                     break;
+                case GameState.PAUSE:
+                    UpdatePause();
+                    break;
+                case GameState.SETTINGS:
+                    UpdateSettings();
+                    break;
             }
 
             base.Update(gameTime);
@@ -227,7 +258,7 @@ namespace Galactic_Vanguard
 
             void UpdateLaunch()
             {
-                playBtn.Update(input);
+                playBtn.Update();
 
                 if (playBtn.pressed)
                 {
@@ -237,7 +268,7 @@ namespace Galactic_Vanguard
 
             void UpdateMenu()
             {
-                startBtn.Update(input);
+                startBtn.Update();
 
                 if(startBtn.pressed)
                 {
@@ -254,6 +285,47 @@ namespace Galactic_Vanguard
                 HUDControl();
 
                 space.Update(gameTime);
+
+                pauseBtn.Update();
+
+
+                if (pauseBtn.pressed || InputController.currKeyboard.IsKeyDown(Keys.P))
+                {
+                    gameState.SetState(GameState.PAUSE);
+                }
+            }
+
+            void UpdatePause()
+            {
+                resumeBtn.Update();
+                settingsBtn.Update();
+                exitBtn.Update();
+
+                if(resumeBtn.pressed)
+                {
+                    gameState.SetState(GameState.INGAME);
+                }
+                else if(settingsBtn.pressed)
+                {
+                    gameState.SetState(GameState.SETTINGS);
+                }
+                else if(exitBtn.pressed)
+                {
+                    Exit();
+                }
+            }
+
+            void UpdateSettings()
+            {
+                backBtn.Update();
+                if (backBtn.pressed)
+                {
+                    gameState.SetState(GameState.PAUSE);
+                }
+
+                volumeSlider.Update();
+                SoundEffect.MasterVolume = volumeSlider.GetValue();
+                MediaPlayer.Volume = volumeSlider.GetValue();
             }
         }
 
@@ -273,6 +345,15 @@ namespace Galactic_Vanguard
                 case GameState.INGAME:
                     DrawInGame();
                     break;
+                case GameState.PAUSE:
+                    DrawInGame();
+                    DrawPause();
+                    break;
+                case GameState.SETTINGS:
+                    DrawInGame();
+                    DrawSettings();
+                    break;
+
             }
             DrawText();
             base.Draw(gameTime);
@@ -303,6 +384,23 @@ namespace Galactic_Vanguard
                 //spriteBatch.Draw(blankImg, leftSide, Color.Crimson);
                 //spriteBatch.Draw(blankImg, rightSide, Color.DarkSlateGray);
                 hud.Draw(spriteBatch);
+
+                pauseBtn.Draw(spriteBatch);
+            }
+
+            void DrawPause()
+            {
+                GraphicsHelper.DrawRec(spriteBatch, gameRec, Color.Black * 0.7f);
+                resumeBtn.Draw(spriteBatch);
+                settingsBtn.Draw(spriteBatch);
+                exitBtn.Draw(spriteBatch);
+            }
+
+            void DrawSettings()
+            {
+                GraphicsHelper.DrawRec(spriteBatch, gameRec, Color.Black * 0.7f);
+                backBtn.Draw(spriteBatch);
+                volumeSlider.Draw(spriteBatch);
             }
         }
 

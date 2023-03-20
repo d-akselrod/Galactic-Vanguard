@@ -9,6 +9,7 @@
         public const int INGAME = 3;
         public const int PAUSE = 4;
         public const int ENDGAME = 5;
+        public const int SETTINGS = 6;
 
         private int gameState;
 

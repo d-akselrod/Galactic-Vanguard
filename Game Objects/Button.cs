@@ -12,19 +12,28 @@ namespace Galactic_Vanguard
         private Rectangle rec;
         private Color color;
         private double rotation;
+        private Color originalColor;
 
         public Button(Texture2D img, Rectangle rec)
         {
             this.img = img;
             this.rec = rec;
             color = Color.White;
+            originalColor = color;
         }
 
-        public void Update(InputController input)
+        public Button(Texture2D img, Rectangle rec, Color color)
+        {
+            this.img = img;
+            this.rec = rec;
+            this.originalColor = color;
+        }
+
+        public void Update()
         {
             if (Collision.BoxPoint(rec, InputController.currMouse.Position))
             {
-                color = Color.White * 0.85f;
+                color = originalColor * 0.6f;
 
                 if (InputController.currMouse.LeftButton == ButtonState.Pressed && InputController.prevMouse.LeftButton == ButtonState.Released)
                 {
@@ -37,7 +46,7 @@ namespace Galactic_Vanguard
             }
             else
             {
-                color = Color.White;
+                color = originalColor;
                 pressed = false;
             }
         }

@@ -227,6 +227,7 @@ namespace Galactic_Vanguard
                 XWingJunk();
                 XWingUpgrade();
                 XWingAmmoKit();
+                BulletXWing();
             }
 
 
@@ -369,6 +370,22 @@ namespace Galactic_Vanguard
                         spaceEntities.Add(new Explosion(tie.GetRec().Center, tie.GetRec().Width + tie.GetRec().Width, 1f));
                         tie = new Tie(false);
                         score += 15;
+                        goto CollisionDetected;
+                    }
+                }
+            CollisionDetected:
+                { }
+            }
+
+            void BulletXWing()
+            {
+                foreach (Bullet bullet in spaceEntities.OfType<TieBullet>())
+                {
+                    if (xwing.Collides(bullet.GetRec()))
+                    {
+                        spaceEntities.Add(new Explosion(bullet.GetRec().Center + new Point(0,20), 10, 1f));
+                        spaceEntities.Remove(bullet);
+                        XWingDmg(10);
                         goto CollisionDetected;
                     }
                 }
