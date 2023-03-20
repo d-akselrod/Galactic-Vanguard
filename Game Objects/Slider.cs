@@ -36,14 +36,25 @@ namespace Galactic_Vanguard.Game_Objects
             {
                 held = true;
             }
-            else
+            else if(InputController.currMouse.LeftButton == ButtonState.Released)
             {
                 held = false;
             }
 
             if (held)
             {                
-                adjustorRec.X = mousePos.X - adjustorRec.Width/2;               
+                if (mousePos.X >= barRec.Left && mousePos.X <= barRec.Right)
+                {
+                    adjustorRec.X = mousePos.X - adjustorRec.Width / 2;
+                }
+                else if(mousePos.X < barRec.Left)
+                {
+                    adjustorRec.X = barRec.Left - adjustorRec.Width / 2;
+                }
+                else if (mousePos.X > barRec.Right)
+                {
+                    adjustorRec.X = barRec.Right - adjustorRec.Width / 2;
+                }
             }
         }
 
@@ -55,7 +66,20 @@ namespace Galactic_Vanguard.Game_Objects
 
         public float GetValue()
         {
-            return ((float)adjustorRec.Center.X - (float)barRec.Left) / (float)barRec.Width;
+            float value = ((float)adjustorRec.Center.X - (float)barRec.Left) / (float)barRec.Width;
+
+            if (value > 1)
+            {
+                return 1;
+            }
+            else if (value < 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return value;
+            }
         }
     }
 }

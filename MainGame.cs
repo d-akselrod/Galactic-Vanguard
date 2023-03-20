@@ -355,7 +355,6 @@ namespace Galactic_Vanguard
                     break;
 
             }
-            DrawText();
             base.Draw(gameTime);
             spriteBatch.End();
 
