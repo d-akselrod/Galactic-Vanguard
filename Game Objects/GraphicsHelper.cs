@@ -35,5 +35,10 @@ namespace Galactic_Vanguard
         {
             return new Point((p2.X + p1.X) / 2, (p2.Y + p1.Y) / 2);
         }
+
+        public static void DrawCentralText(SpriteBatch spriteBatch, SpriteFont font, string text, int y, Color color)
+        {
+            spriteBatch.DrawString(font, text, new Vector2(GameEnvironment.rec.Center.X - font.MeasureString(text).X / 2, y), color);
+        }
     }
 }

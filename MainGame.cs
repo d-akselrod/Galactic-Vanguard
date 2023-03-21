@@ -78,8 +78,15 @@ namespace Galactic_Vanguard
         //Game Entities
         private GameEnvironment space;
 
-        //Controls
+        //Control
         public static Hashtable controls;
+
+        private Control moveRight;
+        private Control moveLeft;
+        private Control rotateRight;
+        private Control rotateLeft;
+        private Control shoot;
+        private Control reload;
 
         public MainGame()
         {
@@ -93,7 +100,7 @@ namespace Galactic_Vanguard
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.SynchronizeWithVerticalRetrace = true;
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
 
             /*SamplerState samplerState = new SamplerState();
             samplerState.Filter = TextureFilter.Linear;
@@ -133,6 +140,14 @@ namespace Galactic_Vanguard
             controls.Add("ROTATE_RIGHT", Keys.Right);
             controls.Add("SHOOT", Keys.Space);
             controls.Add("RELOAD", Keys.R);
+
+            moveRight = new Control("MOVE_RIGHT", Keys.D, 0);
+            moveLeft = new Control("MOVE_LEFT", Keys.A, 1);
+            rotateRight = new Control("ROTATE_RIGHT", Keys.Right, 2);
+            rotateLeft = new Control("ROTATE_LEFT", Keys.Left, 3);
+            shoot = new Control("SHOOT", Keys.Space, 4);
+            reload = new Control("RELOAD", Keys.R, 5);
+
 
             base.Initialize();
         }
@@ -219,7 +234,7 @@ namespace Galactic_Vanguard
 
             void LoadSliders()
             {
-                volumeSlider = new Slider(Content.Load<Texture2D>("Images/Sprites/volumeBar"), Content.Load<Texture2D>("Images/Sprites/volumeSlider"), GraphicsHelper.GetCentralRectangle(screenRec.Width, 150, 350, 30));
+                volumeSlider = new Slider(Content.Load<Texture2D>("Images/Sprites/volumeBar"), Content.Load<Texture2D>("Images/Sprites/volumeSlider"), GraphicsHelper.GetCentralRectangle(screenRec.Width, 50, 350, 30));
             }
 
             void LoadSFX()
@@ -232,6 +247,7 @@ namespace Galactic_Vanguard
             void LoadFonts()
             {
                 font = Content.Load<SpriteFont>("Fonts/hudFont");
+                Control.font = font;
                 HUD.font = font;
             }       
         
@@ -351,6 +367,14 @@ namespace Galactic_Vanguard
                 volumeSlider.Update();
                 SoundEffect.MasterVolume = volumeSlider.GetValue();
                 MediaPlayer.Volume = volumeSlider.GetValue();
+
+                moveRight.Update(ref controls);
+                moveLeft.Update(ref controls);
+                rotateRight.Update(ref controls);
+                rotateLeft.Update(ref controls);
+                shoot.Update(ref controls);
+                reload.Update(ref controls);
+
             }
         }
 
@@ -384,6 +408,8 @@ namespace Galactic_Vanguard
                     break;
 
             }
+            DrawText();
+
             base.Draw(gameTime);
             spriteBatch.End();
 
@@ -429,6 +455,16 @@ namespace Galactic_Vanguard
                 GraphicsHelper.DrawRec(spriteBatch, gameRec, Color.Black * 0.7f);
                 backBtn.Draw(spriteBatch);
                 volumeSlider.Draw(spriteBatch);
+
+                GraphicsHelper.DrawCentralText(spriteBatch, font, "CONTROLS", 200, Color.White);
+
+                moveRight.Draw(spriteBatch);
+                moveLeft.Draw(spriteBatch);
+                rotateLeft.Draw(spriteBatch);
+                rotateRight.Draw(spriteBatch);
+                shoot.Draw(spriteBatch);
+                reload.Draw(spriteBatch);
+
             }
         }
 
@@ -446,7 +482,7 @@ namespace Galactic_Vanguard
         {
             try
             {
-                spriteBatch.DrawString(font, Convert.ToString(gameState.GetState()), new Vector2(0, 0), Color.White);
+                spriteBatch.DrawString(font, Keys.S.ToString(), new Vector2(0, 0), Color.White);
 
             }
             catch

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,16 @@ namespace Galactic_Vanguard
             InputController currInput =  new InputController();
             currInput.Update();
             return currInput;
+        }
+
+        public static bool Click(Rectangle rec)
+        {
+            return currMouse.LeftButton == ButtonState.Pressed && rec.Contains(currMouse.Position);         
+        }
+
+        public static bool Misclick(Rectangle rec)
+        {
+            return currMouse.LeftButton == ButtonState.Pressed && !rec.Contains(currMouse.Position);
         }
     }
 }
