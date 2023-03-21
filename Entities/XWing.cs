@@ -97,16 +97,16 @@ namespace Galactic_Warfare
 
         private void MovementControl(KeyboardState keyboard)
         {
-            if ((keyboard.IsKeyDown(Keys.D) && keyboard.IsKeyDown(Keys.A))
-                || (!keyboard.IsKeyDown(Keys.D) && !keyboard.IsKeyDown(Keys.A)))
+            if ((keyboard.IsKeyDown((Keys)MainGame.controls["MOVE_LEFT"]) && keyboard.IsKeyDown((Keys)MainGame.controls["MOVE_RIGHT"]))
+                || (!keyboard.IsKeyDown((Keys)MainGame.controls["MOVE_LEFT"]) && !keyboard.IsKeyDown((Keys)MainGame.controls["MOVE_RIGHT"])))
             {
                 velocity.X = 0;
             }
-            else if (keyboard.IsKeyDown(Keys.A) && rec.Left > gameRec.Left + 50)
+            else if (keyboard.IsKeyDown((Keys)MainGame.controls["MOVE_LEFT"]) && rec.Left > gameRec.Left + 50)
             {
                 velocity.X = -linearSpeed;
             }
-            else if (keyboard.IsKeyDown(Keys.D) && rec.Right < gameRec.Right - 50)
+            else if (keyboard.IsKeyDown((Keys)MainGame.controls["MOVE_RIGHT"]) && rec.Right < gameRec.Right - 50)
             {
                 velocity.X = linearSpeed;
             }
@@ -115,16 +115,16 @@ namespace Galactic_Warfare
                 velocity.X = 0;
             }
 
-            if ((keyboard.IsKeyDown(Keys.Right) && keyboard.IsKeyDown(Keys.Left))
-                || (!keyboard.IsKeyDown(Keys.Right) && !keyboard.IsKeyDown(Keys.Left)))
+            if ((keyboard.IsKeyDown((Keys)MainGame.controls["ROTATE_RIGHT"]) && keyboard.IsKeyDown((Keys)MainGame.controls["ROTATE_LEFT"]))
+                || (!keyboard.IsKeyDown((Keys)MainGame.controls["ROTATE_RIGHT"]) && !keyboard.IsKeyDown((Keys)MainGame.controls["ROTATE_LEFT"])))
             {
                 rotationalVelocity = 0;
             }
-            else if (keyboard.IsKeyDown(Keys.Left))
+            else if (keyboard.IsKeyDown((Keys)MainGame.controls["ROTATE_LEFT"]))
             {
                 rotationalVelocity = rotationalSpeed * ((float)(-1 * Math.PI / 180));
             }
-            else if (keyboard.IsKeyDown(Keys.Right))
+            else if (keyboard.IsKeyDown((Keys)MainGame.controls["ROTATE_RIGHT"]))
             {
                 rotationalVelocity = rotationalSpeed * (float)(1 * Math.PI / 180);
             }
@@ -136,12 +136,12 @@ namespace Galactic_Warfare
 
         private void GunControl(KeyboardState keyboard)
         {
-            if (keyboard.IsKeyDown(Keys.Space) && gun.fireTimer <= 0 && gun.loadedAmmo > 0 && gun.isReloading == false)
+            if (keyboard.IsKeyDown((Keys)MainGame.controls["SHOOT"]) && gun.fireTimer <= 0 && gun.loadedAmmo > 0 && gun.isReloading == false)
             {
                 gun.XWingShoot(rec, rotation);
             }
 
-            if(keyboard.IsKeyDown(Keys.R) && gun.isReloading == false && gun.loadedAmmo < Gun.magSize && externalAmmo > 0)
+            if(keyboard.IsKeyDown((Keys)MainGame.controls["RELOAD"]) && gun.isReloading == false && gun.loadedAmmo < Gun.magSize && externalAmmo > 0)
             {
                 gun.Reload(ref externalAmmo);
             }

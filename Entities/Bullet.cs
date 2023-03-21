@@ -31,6 +31,7 @@ namespace Galactic_Vanguard
         public override void Draw(SpriteBatch spritebatch)
         {
             spritebatch.Draw(image, rec, null, color, (float)angle, new Vector2(image.Width / 2, image.Height / 2), SpriteEffects.None, 0f);
+            Rectangle r = new Rectangle();
         }
     }
 }

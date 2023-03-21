@@ -23,7 +23,7 @@ namespace Galactic_Vanguard
             {
                 secondsPassed += 1;
 
-                if(secondsPassed % 120 == 0)
+                if(secondsPassed % 60 == 0)
                 {
                     minutesPassed += 1;
                 }
@@ -47,7 +47,7 @@ namespace Galactic_Vanguard
 
         public string GetTimeFormat()
         {
-            return minutesPassed.ToString("d2") + " :" + (secondsPassed % 60).ToString("d2");
+            return (minutesPassed % 60).ToString("d2") + " :" + (secondsPassed % 60).ToString("d2");
         }
     }
 }

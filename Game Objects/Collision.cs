@@ -24,7 +24,7 @@ namespace Galactic_Vanguard
             }
             return true;
         }
-
+        
         public static bool CirclePoint(Point c, double r, Point p)
         {
             if (Distance(c, p) <= r)

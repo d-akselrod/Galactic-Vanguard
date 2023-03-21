@@ -79,7 +79,7 @@ namespace Galactic_Vanguard
         private GameEnvironment space;
 
         //Controls
-        private Hashtable controls;
+        public static Hashtable controls;
 
         public MainGame()
         {
@@ -125,6 +125,14 @@ namespace Galactic_Vanguard
             renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
             cursor = new Cursor(new Rectangle(0,0,30,30));
             IsMouseVisible = false;
+
+            controls = new Hashtable();
+            controls.Add("MOVE_LEFT", Keys.A);
+            controls.Add("MOVE_RIGHT", Keys.D);
+            controls.Add("ROTATE_LEFT", Keys.Left);
+            controls.Add("ROTATE_RIGHT", Keys.Right);
+            controls.Add("SHOOT", Keys.Space);
+            controls.Add("RELOAD", Keys.R);
 
             base.Initialize();
         }
@@ -297,7 +305,7 @@ namespace Galactic_Vanguard
 
             void UpdateInGame()
             {
-                TimeControl();
+                gameTimer.Update();
                 HyperSpace();
                 HUDControl();
 
@@ -432,11 +440,6 @@ namespace Galactic_Vanguard
 
             leftSide = new Rectangle(0, 0, gameRec.Left - 3, gameRec.Height);
             rightSide = new Rectangle(gameRec.Right + 3, 0, screenRec.Width - gameRec.Right + 3, gameRec.Height);
-        }
-    
-        private void TimeControl()
-        {
-            gameTimer.Update();
         }
 
         private void DrawText()
