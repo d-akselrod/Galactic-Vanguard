@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.ComponentModel;
+using System.Collections.Specialized;
+using System.Security.AccessControl;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Design;
@@ -30,11 +33,16 @@ namespace Galactic_Vanguard
         private InputController input;
         private MusicController music;
         private HUD hud;
+        private RenderTarget2D renderTarget;
+        
+        public static string gameTimeStr;
 
         private Rectangle leftSide;
         private Rectangle rightSide;
         private Rectangle leftBorder;
         private Rectangle rightBorder;
+
+        private Cursor cursor;
 
         //Titles
         private Texture2D titleImg;
@@ -42,6 +50,7 @@ namespace Galactic_Vanguard
 
         //General Sprites
         private Texture2D blankImg;
+       
 
         //Background Images
         private Texture2D launchBgImg;
@@ -60,15 +69,17 @@ namespace Galactic_Vanguard
         private Button exitBtn;
         private Button backBtn;
 
+        //Sliders
         private Slider volumeSlider;
 
+        //Fonts
         private SpriteFont font;
-        public static string gameTimeStr;
 
         //Game Entities
         private GameEnvironment space;
 
-        RenderTarget2D renderTarget;
+        //Controls
+        private Hashtable controls;
 
         public MainGame()
         {
@@ -112,6 +123,9 @@ namespace Galactic_Vanguard
 
             graphics.ApplyChanges();
             renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
+            cursor = new Cursor(new Rectangle(0,0,30,30));
+            IsMouseVisible = false;
+
             base.Initialize();
         }
 
@@ -158,6 +172,8 @@ namespace Galactic_Vanguard
                 HUD.reloadImg = Content.Load<Texture2D>("Images/Icons/reloadIcon");
                 HUD.emptyImg = Content.Load<Texture2D>("Images/Icons/emptyIcon");
                 HUD.clockImg = Content.Load<Texture2D>("Images/Sprites/secondClock");
+
+                Cursor.img = Content.Load<Texture2D>("Images/Sprites/cursorImg");
             }
 
             void LoadTitles()
@@ -222,6 +238,7 @@ namespace Galactic_Vanguard
         protected override void Update(GameTime gameTime)
         {
             input.Update();
+            cursor.Update(InputController.currMouse.Position);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -338,9 +355,11 @@ namespace Galactic_Vanguard
             {
                 case GameState.LAUNCH:
                     DrawLaunch();
+                    cursor.Draw(spriteBatch);
                     break;
                 case GameState.MENU:
                     DrawMenu();
+                    cursor.Draw(spriteBatch);
                     break;
                 case GameState.INGAME:
                     DrawInGame();
@@ -348,10 +367,12 @@ namespace Galactic_Vanguard
                 case GameState.PAUSE:
                     DrawInGame();
                     DrawPause();
+                    cursor.Draw(spriteBatch);
                     break;
                 case GameState.SETTINGS:
                     DrawInGame();
                     DrawSettings();
+                    cursor.Draw(spriteBatch);
                     break;
 
             }
